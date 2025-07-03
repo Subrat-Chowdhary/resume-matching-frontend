@@ -1,0 +1,705 @@
+[ 40M]  .
+├── [ 80k]  app
+│   ├── [8.2k]  api
+│   │   └── [4.1k]  auth
+│   ├── [ 276]  ClientLayout.tsx
+│   ├── [ 26k]  favicon.ico
+│   ├── [ 488]  globals.css
+│   ├── [5.0k]  health
+│   │   └── [ 883]  page.tsx
+│   ├── [ 829]  layout.tsx
+│   ├── [6.3k]  login
+│   │   └── [2.2k]  page.tsx
+│   ├── [4.2k]  page.tsx
+│   ├── [6.5k]  register
+│   │   └── [2.4k]  page.tsx
+│   ├── [9.1k]  search
+│   │   └── [5.0k]  page.tsx
+│   └── [8.8k]  upload
+│       └── [4.7k]  page.tsx
+├── [   0]  frontend-tree.txt
+├── [4.5k]  lib
+│   ├── [ 117]  auth.ts
+│   └── [ 267]  prisma.ts
+├── [ 133]  next.config.ts
+├── [ 211]  next-env.d.ts
+├── [ 40M]  node_modules
+│   ├── [8.2k]  @alloc
+│   │   └── [4.1k]  quick-lru
+│   ├── [8.2k]  @ampproject
+│   │   └── [4.1k]  remapping
+│   ├── [ 13k]  aws-ssl-profiles
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.2k]  package.json
+│   │   └── [2.3k]  README.md
+│   ├── [8.2k]  @babel
+│   │   └── [4.1k]  runtime
+│   ├── [ 71k]  bcryptjs
+│   │   ├── [4.1k]  bin
+│   │   ├── [  89]  index.d.ts
+│   │   ├── [ 42k]  index.js
+│   │   ├── [1.5k]  LICENSE
+│   │   ├── [2.1k]  package.json
+│   │   ├── [7.6k]  README.md
+│   │   ├── [5.7k]  types.d.ts
+│   │   └── [4.1k]  umd
+│   ├── [ 26k]  busboy
+│   │   ├── [4.1k]  bench
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 810]  package.json
+│   │   ├── [7.9k]  README.md
+│   │   └── [4.1k]  test
+│   ├── [ 32k]  caniuse-lite
+│   │   ├── [4.1k]  data
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 19k]  LICENSE
+│   │   ├── [ 742]  package.json
+│   │   └── [ 164]  README.md
+│   ├── [ 12k]  chownr
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.8k]  LICENSE.md
+│   │   ├── [1.6k]  package.json
+│   │   └── [  59]  README.md
+│   ├── [4.7k]  client-only
+│   │   ├── [ 144]  error.js
+│   │   ├── [   0]  index.js
+│   │   └── [ 467]  package.json
+│   ├── [ 21k]  color
+│   │   ├── [ 11k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 896]  package.json
+│   │   └── [3.7k]  README.md
+│   ├── [ 31k]  color-convert
+│   │   ├── [1.4k]  CHANGELOG.md
+│   │   ├── [ 17k]  conversions.js
+│   │   ├── [1.7k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 827]  package.json
+│   │   ├── [2.9k]  README.md
+│   │   └── [2.3k]  route.js
+│   ├── [ 11k]  color-name
+│   │   ├── [4.6k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 607]  package.json
+│   │   └── [ 384]  README.md
+│   ├── [ 14k]  color-string
+│   │   ├── [5.7k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 732]  package.json
+│   │   └── [2.6k]  README.md
+│   ├── [ 27k]  cookie
+│   │   ├── [8.2k]  index.js
+│   │   ├── [1.2k]  LICENSE
+│   │   ├── [1.1k]  package.json
+│   │   ├── [ 12k]  README.md
+│   │   └── [1.2k]  SECURITY.md
+│   ├── [1.2M]  csstype
+│   │   ├── [903k]  index.d.ts
+│   │   ├── [329k]  index.js.flow
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [2.1k]  package.json
+│   │   └── [ 11k]  README.md
+│   ├── [ 34k]  denque
+│   │   ├── [1.2k]  CHANGELOG.md
+│   │   ├── [ 730]  index.d.ts
+│   │   ├── [ 12k]  index.js
+│   │   ├── [ 11k]  LICENSE
+│   │   ├── [1.8k]  package.json
+│   │   └── [2.9k]  README.md
+│   ├── [ 24k]  detect-libc
+│   │   ├── [ 436]  index.d.ts
+│   │   ├── [4.1k]  lib
+│   │   ├── [ 11k]  LICENSE
+│   │   ├── [1.1k]  package.json
+│   │   └── [3.2k]  README.md
+│   ├── [8.2k]  @emnapi
+│   │   └── [4.1k]  runtime
+│   ├── [ 48k]  enhanced-resolve
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [2.6k]  package.json
+│   │   ├── [ 11k]  README.md
+│   │   └── [ 25k]  types.d.ts
+│   ├── [ 35k]  framer-motion
+│   │   ├── [4.1k]  client
+│   │   ├── [4.1k]  dist
+│   │   ├── [4.1k]  dom
+│   │   ├── [1.1k]  LICENSE.md
+│   │   ├── [4.1k]  m
+│   │   ├── [4.1k]  mini
+│   │   ├── [4.6k]  package.json
+│   │   └── [5.0k]  README.md
+│   ├── [ 13k]  generate-function
+│   │   ├── [ 609]  example.js
+│   │   ├── [3.2k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 702]  package.json
+│   │   ├── [2.2k]  README.md
+│   │   └── [1.2k]  test.js
+│   ├── [ 37k]  graceful-fs
+│   │   ├── [ 496]  clone.js
+│   │   ├── [ 13k]  graceful-fs.js
+│   │   ├── [2.7k]  legacy-streams.js
+│   │   ├── [ 791]  LICENSE
+│   │   ├── [1.0k]  package.json
+│   │   ├── [ 10k]  polyfills.js
+│   │   └── [4.7k]  README.md
+│   ├── [ 27k]  iconv-lite
+│   │   ├── [6.6k]  Changelog.md
+│   │   ├── [4.1k]  encodings
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.1k]  package.json
+│   │   └── [6.4k]  README.md
+│   ├── [ 20k]  @img
+│   │   ├── [4.1k]  sharp-libvips-linuxmusl-x64
+│   │   ├── [4.1k]  sharp-libvips-linux-x64
+│   │   ├── [4.1k]  sharp-linuxmusl-x64
+│   │   └── [4.1k]  sharp-linux-x64
+│   ├── [8.2k]  @isaacs
+│   │   └── [4.1k]  fs-minipass
+│   ├── [ 59k]  is-arrayish
+│   │   ├── [ 318]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.1k]  package.json
+│   │   ├── [ 704]  README.md
+│   │   └── [ 52k]  yarn-error.log
+│   ├── [ 18k]  is-property
+│   │   ├── [ 11k]  is-property.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 743]  package.json
+│   │   └── [ 625]  README.md
+│   ├── [ 25k]  jiti
+│   │   ├── [4.1k]  dist
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [4.3k]  package.json
+│   │   └── [7.7k]  README.md
+│   ├── [ 19k]  jose
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.1k]  LICENSE.md
+│   │   ├── [2.0k]  package.json
+│   │   └── [7.8k]  README.md
+│   ├── [ 25k]  @jridgewell
+│   │   ├── [4.1k]  gen-mapping
+│   │   ├── [4.1k]  resolve-uri
+│   │   ├── [4.1k]  set-array
+│   │   ├── [4.1k]  sourcemap-codec
+│   │   └── [4.1k]  trace-mapping
+│   ├── [ 34k]  lightningcss
+│   │   ├── [ 16k]  LICENSE
+│   │   ├── [4.1k]  node
+│   │   ├── [3.8k]  package.json
+│   │   └── [6.1k]  README.md
+│   ├── [9.2M]  lightningcss-linux-x64-gnu
+│   │   ├── [ 16k]  LICENSE
+│   │   ├── [9.2M]  lightningcss.linux-x64-gnu.node
+│   │   ├── [ 745]  package.json
+│   │   └── [ 123]  README.md
+│   ├── [9.2M]  lightningcss-linux-x64-musl
+│   │   ├── [ 16k]  LICENSE
+│   │   ├── [9.2M]  lightningcss.linux-x64-musl.node
+│   │   ├── [ 747]  package.json
+│   │   └── [ 124]  README.md
+│   ├── [ 86k]  long
+│   │   ├── [  56]  index.d.ts
+│   │   ├── [ 44k]  index.js
+│   │   ├── [ 11k]  LICENSE
+│   │   ├── [1.5k]  package.json
+│   │   ├── [ 11k]  README.md
+│   │   ├── [ 10k]  types.d.ts
+│   │   └── [4.1k]  umd
+│   ├── [ 24k]  lru-cache
+│   │   ├── [8.2k]  index.js
+│   │   ├── [ 765]  LICENSE
+│   │   ├── [4.1k]  node_modules
+│   │   ├── [ 705]  package.json
+│   │   └── [6.0k]  README.md
+│   ├── [ 26k]  lru.min
+│   │   ├── [4.1k]  browser
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [2.5k]  package.json
+│   │   └── [ 11k]  README.md
+│   ├── [ 24k]  magic-string
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.8k]  package.json
+│   │   └── [ 13k]  README.md
+│   ├── [ 38k]  minipass
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 787]  LICENSE
+│   │   ├── [1.9k]  package.json
+│   │   └── [ 27k]  README.md
+│   ├── [ 13k]  minizlib
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.3k]  LICENSE
+│   │   ├── [1.8k]  package.json
+│   │   └── [2.0k]  README.md
+│   ├── [ 20k]  mkdirp
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.2k]  LICENSE
+│   │   ├── [2.1k]  package.json
+│   │   └── [8.6k]  readme.markdown
+│   ├── [ 11k]  motion-dom
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.1k]  LICENSE.md
+│   │   └── [1.3k]  package.json
+│   ├── [ 10k]  motion-utils
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.1k]  LICENSE.md
+│   │   └── [ 939]  package.json
+│   ├── [ 33k]  mysql2
+│   │   ├── [  42]  index.d.ts
+│   │   ├── [2.0k]  index.js
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  License
+│   │   ├── [2.4k]  package.json
+│   │   ├── [3.4k]  promise.d.ts
+│   │   ├── [6.3k]  promise.js
+│   │   ├── [5.8k]  README.md
+│   │   └── [4.1k]  typings
+│   ├── [ 15k]  named-placeholders
+│   │   ├── [4.3k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [4.1k]  node_modules
+│   │   ├── [ 618]  package.json
+│   │   └── [1.1k]  README.md
+│   ├── [ 39k]  nanoid
+│   │   ├── [4.1k]  async
+│   │   ├── [4.1k]  bin
+│   │   ├── [2.8k]  index.browser.cjs
+│   │   ├── [1.1k]  index.browser.js
+│   │   ├── [3.4k]  index.cjs
+│   │   ├── [2.3k]  index.d.cts
+│   │   ├── [2.3k]  index.d.ts
+│   │   ├── [1.3k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 169]  nanoid.js
+│   │   ├── [4.1k]  non-secure
+│   │   ├── [2.3k]  package.json
+│   │   ├── [1.6k]  README.md
+│   │   └── [4.1k]  url-alphabet
+│   ├── [ 16k]  @next
+│   │   ├── [4.1k]  env
+│   │   ├── [4.1k]  swc-linux-x64-gnu
+│   │   └── [4.1k]  swc-linux-x64-musl
+│   ├── [ 70k]  next
+│   │   ├── [  38]  amp.d.ts
+│   │   ├── [  50]  amp.js
+│   │   ├── [  89]  app.d.ts
+│   │   ├── [  46]  app.js
+│   │   ├── [  42]  babel.d.ts
+│   │   ├── [  54]  babel.js
+│   │   ├── [5.5k]  cache.d.ts
+│   │   ├── [1.5k]  cache.js
+│   │   ├── [  36]  client.d.ts
+│   │   ├── [  48]  client.js
+│   │   ├── [4.1k]  compat
+│   │   ├── [ 149]  config.d.ts
+│   │   ├── [  70]  config.js
+│   │   ├── [  44]  constants.d.ts
+│   │   ├── [  56]  constants.js
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 109]  document.d.ts
+│   │   ├── [  51]  document.js
+│   │   ├── [ 113]  dynamic.d.ts
+│   │   ├── [  54]  dynamic.js
+│   │   ├── [  97]  error.d.ts
+│   │   ├── [  48]  error.js
+│   │   ├── [4.1k]  experimental
+│   │   ├── [4.1k]  font
+│   │   ├── [  93]  form.d.ts
+│   │   ├── [  47]  form.js
+│   │   ├── [ 101]  head.d.ts
+│   │   ├── [ 141]  headers.d.ts
+│   │   ├── [ 229]  headers.js
+│   │   ├── [  51]  head.js
+│   │   ├── [ 123]  image.d.ts
+│   │   ├── [  61]  image.js
+│   │   ├── [4.1k]  image-types
+│   │   ├── [ 783]  index.d.ts
+│   │   ├── [ 109]  jest.d.ts
+│   │   ├── [  51]  jest.js
+│   │   ├── [4.1k]  legacy
+│   │   ├── [1.1k]  license.md
+│   │   ├── [  93]  link.d.ts
+│   │   ├── [  47]  link.js
+│   │   ├── [  52]  navigation.d.ts
+│   │   ├── [  64]  navigation.js
+│   │   ├── [4.1k]  navigation-types
+│   │   ├── [4.1k]  node_modules
+│   │   ├── [  48]  og.d.ts
+│   │   ├── [  60]  og.js
+│   │   ├── [ 11k]  package.json
+│   │   ├── [3.3k]  README.md
+│   │   ├── [ 101]  router.d.ts
+│   │   ├── [  49]  router.js
+│   │   ├── [ 101]  script.d.ts
+│   │   ├── [  49]  script.js
+│   │   ├── [1.2k]  server.d.ts
+│   │   ├── [1.5k]  server.js
+│   │   ├── [4.1k]  types
+│   │   ├── [  68]  types.d.ts
+│   │   ├── [  14]  types.js
+│   │   ├── [  41]  web-vitals.d.ts
+│   │   └── [  53]  web-vitals.js
+│   ├── [ 78k]  next-auth
+│   │   ├── [4.1k]  adapters.d.ts
+│   │   ├── [2.6k]  adapters.d.ts.map
+│   │   ├── [4.1k]  client
+│   │   ├── [4.1k]  core
+│   │   ├── [4.1k]  css
+│   │   ├── [ 277]  index.d.ts
+│   │   ├── [ 298]  index.d.ts.map
+│   │   ├── [1.8k]  index.js
+│   │   ├── [4.1k]  jwt
+│   │   ├── [ 748]  LICENSE
+│   │   ├── [ 120]  middleware.d.ts
+│   │   ├── [ 175]  middleware.d.ts.map
+│   │   ├── [1.5k]  middleware.js
+│   │   ├── [4.1k]  next
+│   │   ├── [4.5k]  package.json
+│   │   ├── [ 12k]  providers
+│   │   ├── [4.1k]  react
+│   │   ├── [ 13k]  README.md
+│   │   ├── [4.1k]  src
+│   │   └── [4.1k]  utils
+│   ├── [ 28k]  oauth
+│   │   ├── [4.1k]  examples
+│   │   ├── [ 148]  index.js
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [  97]  Makefile
+│   │   ├── [ 530]  package.json
+│   │   ├── [9.3k]  Readme.md
+│   │   └── [4.1k]  tests
+│   ├── [ 32k]  object-hash
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 15k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.3k]  package.json
+│   │   └── [6.8k]  readme.markdown
+│   ├── [ 14k]  oidc-token-hash
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE.md
+│   │   ├── [ 769]  package.json
+│   │   └── [3.7k]  README.md
+│   ├── [ 30k]  openid-client
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE.md
+│   │   ├── [2.3k]  package.json
+│   │   ├── [ 15k]  README.md
+│   │   └── [4.1k]  types
+│   ├── [8.2k]  @panva
+│   │   └── [4.1k]  hkdf
+│   ├── [ 10k]  picocolors
+│   │   ├── [ 787]  LICENSE
+│   │   ├── [ 552]  package.json
+│   │   ├── [ 598]  picocolors.browser.js
+│   │   ├── [ 138]  picocolors.d.ts
+│   │   ├── [2.7k]  picocolors.js
+│   │   ├── [ 622]  README.md
+│   │   └── [1.0k]  types.d.ts
+│   ├── [ 13k]  postcss
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [2.5k]  package.json
+│   │   └── [1.2k]  README.md
+│   ├── [ 61k]  preact
+│   │   ├── [4.1k]  compat
+│   │   ├── [4.1k]  debug
+│   │   ├── [4.1k]  devtools
+│   │   ├── [4.1k]  dist
+│   │   ├── [4.1k]  hooks
+│   │   ├── [4.1k]  jsx-runtime
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [8.9k]  package.json
+│   │   ├── [ 14k]  README.md
+│   │   ├── [4.1k]  src
+│   │   └── [4.1k]  test-utils
+│   ├── [ 20k]  preact-render-to-string
+│   │   ├── [4.1k]  dist
+│   │   ├── [  63]  jsx.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [4.3k]  package.json
+│   │   ├── [2.2k]  README.md
+│   │   ├── [4.1k]  src
+│   │   └── [  88]  typings.json
+│   ├── [ 23k]  pretty-format
+│   │   ├── [ 11k]  index.js
+│   │   ├── [ 767]  LICENSE.md
+│   │   ├── [ 671]  package.json
+│   │   ├── [4.1k]  plugins
+│   │   ├── [ 155]  printString.js
+│   │   └── [2.2k]  README.md
+│   ├── [ 33k]  @prisma
+│   │   ├── [4.1k]  client
+│   │   ├── [4.1k]  config
+│   │   ├── [4.1k]  debug
+│   │   ├── [4.1k]  engines
+│   │   ├── [4.1k]  engines-version
+│   │   ├── [4.1k]  fetch-engine
+│   │   └── [4.1k]  get-platform
+│   ├── [ 18M]  prisma
+│   │   ├── [4.1k]  build
+│   │   ├── [  93]  config.d.ts
+│   │   ├── [1.1k]  config.js
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 18M]  libquery_engine-debian-openssl-3.0.x.so.node
+│   │   ├── [ 11k]  LICENSE
+│   │   ├── [4.9k]  package.json
+│   │   ├── [4.1k]  preinstall
+│   │   ├── [4.1k]  prisma-client
+│   │   ├── [4.9k]  README.md
+│   │   └── [4.1k]  scripts
+│   ├── [ 13k]  react
+│   │   ├── [4.1k]  cjs
+│   │   ├── [ 412]  compiler-runtime.js
+│   │   ├── [ 186]  index.js
+│   │   ├── [ 218]  jsx-dev-runtime.js
+│   │   ├── [ 244]  jsx-dev-runtime.react-server.js
+│   │   ├── [ 210]  jsx-runtime.js
+│   │   ├── [ 236]  jsx-runtime.react-server.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.2k]  package.json
+│   │   ├── [ 212]  react.react-server.js
+│   │   └── [1.2k]  README.md
+│   ├── [ 22k]  react-dom
+│   │   ├── [4.1k]  cjs
+│   │   ├── [1.4k]  client.js
+│   │   ├── [ 101]  client.react-server.js
+│   │   ├── [1.4k]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [3.1k]  package.json
+│   │   ├── [1.4k]  profiling.js
+│   │   ├── [ 104]  profiling.react-server.js
+│   │   ├── [ 220]  react-dom.react-server.js
+│   │   ├── [1.1k]  README.md
+│   │   ├── [ 583]  server.browser.js
+│   │   ├── [ 579]  server.bun.js
+│   │   ├── [ 581]  server.edge.js
+│   │   ├── [  58]  server.js
+│   │   ├── [ 619]  server.node.js
+│   │   ├── [ 101]  server.react-server.js
+│   │   ├── [ 319]  static.browser.js
+│   │   ├── [ 313]  static.edge.js
+│   │   ├── [  58]  static.js
+│   │   ├── [ 361]  static.node.js
+│   │   ├── [ 101]  static.react-server.js
+│   │   └── [ 216]  test-utils.js
+│   ├── [ 46k]  safer-buffer
+│   │   ├── [1.5k]  dangerous.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 822]  package.json
+│   │   ├── [ 13k]  Porting-Buffer.md
+│   │   ├── [8.3k]  Readme.md
+│   │   ├── [2.1k]  safer.js
+│   │   └── [ 16k]  tests.js
+│   ├── [ 11k]  scheduler
+│   │   ├── [4.1k]  cjs
+│   │   ├── [ 194]  index.js
+│   │   ├── [ 208]  index.native.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 564]  package.json
+│   │   ├── [ 346]  README.md
+│   │   ├── [ 222]  unstable_mock.js
+│   │   └── [ 232]  unstable_post_task.js
+│   ├── [ 55k]  semver
+│   │   ├── [4.1k]  bin
+│   │   ├── [4.1k]  classes
+│   │   ├── [4.1k]  functions
+│   │   ├── [2.6k]  index.js
+│   │   ├── [4.1k]  internal
+│   │   ├── [ 765]  LICENSE
+│   │   ├── [1.7k]  package.json
+│   │   ├── [  83]  preload.js
+│   │   ├── [ 619]  range.bnf
+│   │   ├── [4.1k]  ranges
+│   │   └── [ 25k]  README.md
+│   ├── [ 18k]  seq-queue
+│   │   ├── [  42]  AUTHORS
+│   │   ├── [  44]  index.js
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 154]  Makefile
+│   │   ├── [ 418]  package.json
+│   │   ├── [3.6k]  README.md
+│   │   └── [4.1k]  test
+│   ├── [ 38k]  sharp
+│   │   ├── [4.1k]  install
+│   │   ├── [4.1k]  lib
+│   │   ├── [ 10k]  LICENSE
+│   │   ├── [7.7k]  package.json
+│   │   ├── [3.2k]  README.md
+│   │   └── [4.1k]  src
+│   ├── [7.7k]  simple-swizzle
+│   │   ├── [ 571]  index.js
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 726]  package.json
+│   │   └── [1.2k]  README.md
+│   ├── [ 42k]  source-map-js
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.5k]  LICENSE
+│   │   ├── [2.5k]  package.json
+│   │   ├── [ 26k]  README.md
+│   │   ├── [3.4k]  source-map.d.ts
+│   │   └── [ 405]  source-map.js
+│   ├── [ 20k]  sqlstring
+│   │   ├── [1.0k]  HISTORY.md
+│   │   ├── [  45]  index.js
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.2k]  package.json
+│   │   └── [8.0k]  README.md
+│   ├── [ 17k]  streamsearch
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [ 842]  package.json
+│   │   ├── [2.7k]  README.md
+│   │   └── [4.1k]  test
+│   ├── [ 51k]  styled-jsx
+│   │   ├── [  49]  babel.js
+│   │   ├── [  68]  babel-test.js
+│   │   ├── [ 512]  css.d.ts
+│   │   ├── [ 469]  css.js
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 160]  global.d.ts
+│   │   ├── [ 682]  index.d.ts
+│   │   ├── [  41]  index.js
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  license.md
+│   │   ├── [ 261]  macro.d.ts
+│   │   ├── [  49]  macro.js
+│   │   ├── [3.3k]  package.json
+│   │   ├── [ 32k]  readme.md
+│   │   ├── [  91]  style.d.ts
+│   │   ├── [  47]  style.js
+│   │   └── [  65]  webpack.js
+│   ├── [ 12k]  @swc
+│   │   ├── [4.1k]  counter
+│   │   └── [4.1k]  helpers
+│   ├── [ 25k]  @tailwindcss
+│   │   ├── [4.1k]  node
+│   │   ├── [4.1k]  oxide
+│   │   ├── [4.1k]  oxide-linux-x64-gnu
+│   │   ├── [4.1k]  oxide-linux-x64-musl
+│   │   └── [4.1k]  postcss
+│   ├── [ 67k]  tailwindcss
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 27k]  index.css
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [2.5k]  package.json
+│   │   ├── [8.2k]  preflight.css
+│   │   ├── [2.0k]  README.md
+│   │   ├── [ 17k]  theme.css
+│   │   └── [  21]  utilities.css
+│   ├── [ 24k]  tapable
+│   │   ├── [4.1k]  lib
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [1.1k]  package.json
+│   │   ├── [8.8k]  README.md
+│   │   └── [4.5k]  tapable.d.ts
+│   ├── [ 65k]  tar
+│   │   ├── [4.1k]  dist
+│   │   ├── [ 765]  LICENSE
+│   │   ├── [8.8k]  package.json
+│   │   └── [ 47k]  README.md
+│   ├── [ 96k]  tslib
+│   │   ├── [ 822]  CopyrightNotice.txt
+│   │   ├── [ 655]  LICENSE.txt
+│   │   ├── [4.1k]  modules
+│   │   ├── [1.2k]  package.json
+│   │   ├── [4.0k]  README.md
+│   │   ├── [2.8k]  SECURITY.md
+│   │   ├── [ 18k]  tslib.d.ts
+│   │   ├── [  36]  tslib.es6.html
+│   │   ├── [ 19k]  tslib.es6.js
+│   │   ├── [ 18k]  tslib.es6.mjs
+│   │   ├── [  32]  tslib.html
+│   │   └── [ 23k]  tslib.js
+│   ├── [ 16k]  @types
+│   │   ├── [4.1k]  node
+│   │   ├── [4.1k]  react
+│   │   └── [4.1k]  react-dom
+│   ├── [ 68k]  typescript
+│   │   ├── [4.1k]  bin
+│   │   ├── [4.1k]  lib
+│   │   ├── [9.2k]  LICENSE.txt
+│   │   ├── [3.6k]  package.json
+│   │   ├── [2.8k]  README.md
+│   │   ├── [2.7k]  SECURITY.md
+│   │   └── [ 38k]  ThirdPartyNoticeText.txt
+│   ├── [ 88k]  undici-types
+│   │   ├── [1.1k]  agent.d.ts
+│   │   ├── [1.5k]  api.d.ts
+│   │   ├── [ 961]  balanced-pool.d.ts
+│   │   ├── [1.3k]  cache.d.ts
+│   │   ├── [5.0k]  client.d.ts
+│   │   ├── [1.0k]  connector.d.ts
+│   │   ├── [ 561]  content-type.d.ts
+│   │   ├── [ 635]  cookies.d.ts
+│   │   ├── [1.6k]  diagnostics-channel.d.ts
+│   │   ├── [ 14k]  dispatcher.d.ts
+│   │   ├── [ 675]  env-http-proxy-agent.d.ts
+│   │   ├── [4.3k]  errors.d.ts
+│   │   ├── [1.6k]  eventsource.d.ts
+│   │   ├── [5.6k]  fetch.d.ts
+│   │   ├── [1.7k]  file.d.ts
+│   │   ├── [1.4k]  filereader.d.ts
+│   │   ├── [5.0k]  formdata.d.ts
+│   │   ├── [ 276]  global-dispatcher.d.ts
+│   │   ├── [ 175]  global-origin.d.ts
+│   │   ├── [ 447]  handlers.d.ts
+│   │   ├── [ 133]  header.d.ts
+│   │   ├── [3.4k]  index.d.ts
+│   │   ├── [ 922]  interceptors.d.ts
+│   │   ├── [1.1k]  LICENSE
+│   │   ├── [2.5k]  mock-agent.d.ts
+│   │   ├── [1.0k]  mock-client.d.ts
+│   │   ├── [ 338]  mock-errors.d.ts
+│   │   ├── [3.9k]  mock-interceptor.d.ts
+│   │   ├── [ 974]  mock-pool.d.ts
+│   │   ├── [1.2k]  package.json
+│   │   ├── [ 691]  patch.d.ts
+│   │   ├── [1.3k]  pool.d.ts
+│   │   ├── [ 669]  pool-stats.d.ts
+│   │   ├── [ 780]  proxy-agent.d.ts
+│   │   ├── [1.7k]  readable.d.ts
+│   │   ├── [ 455]  README.md
+│   │   ├── [ 232]  retry-agent.d.ts
+│   │   ├── [3.0k]  retry-handler.d.ts
+│   │   ├── [ 623]  util.d.ts
+│   │   ├── [5.9k]  webidl.d.ts
+│   │   └── [3.8k]  websocket.d.ts
+│   ├── [ 44k]  uuid
+│   │   ├── [ 13k]  CHANGELOG.md
+│   │   ├── [ 513]  CONTRIBUTING.md
+│   │   ├── [4.1k]  dist
+│   │   ├── [1.1k]  LICENSE.md
+│   │   ├── [4.4k]  package.json
+│   │   ├── [ 17k]  README.md
+│   │   └── [ 323]  wrapper.mjs
+│   └── [ 16k]  yallist
+│       ├── [4.1k]  dist
+│       ├── [1.8k]  LICENSE.md
+│       ├── [1.6k]  package.json
+│       └── [4.5k]  README.md
+├── [ 650]  package.json
+├── [ 75k]  package-lock.json
+├── [  81]  postcss.config.mjs
+├── [4.4k]  prisma
+│   └── [ 335]  schema.prisma
+├── [ 37k]  public
+│   ├── [ 30k]  ahom.png
+│   ├── [ 391]  file.svg
+│   ├── [1.0k]  globe.svg
+│   ├── [1.4k]  next.svg
+│   ├── [ 128]  vercel.svg
+│   └── [ 385]  window.svg
+├── [1.5k]  README.md
+└── [ 598]  tsconfig.json
+
+ 119M used in 239 directories, 464 files
