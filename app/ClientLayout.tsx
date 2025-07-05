@@ -2,7 +2,14 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import { AnalyticsProvider } from "@/lib/providers/AnalyticsProvider";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <SessionProvider>
+      <AnalyticsProvider>
+        {children}
+      </AnalyticsProvider>
+    </SessionProvider>
+  );
 }

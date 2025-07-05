@@ -71,13 +71,19 @@ export default function UploadResumePage() {
   };
 
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-start py-16">
-      <div className="bg-white rounded-xl shadow-xl p-8 max-w-xl w-full border border-gray-200">
-        <h1 className="text-2xl font-bold mb-6 text-center text-slate-800"><span className="text-orange-500 font-extrabold">Upload </span>Resumes</h1>
+    <div className="p-6 lg:p-8">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+          <h1 className="text-3xl font-bold mb-2 text-black">
+            <span className="text-orange-600">Upload</span> Resumes
+          </h1>
+          <p className="text-gray-600 mb-8 font-medium">
+            Add new resumes to your database for AI-powered matching
+          </p>
         
         {/* File Input */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-black mb-2">
             Select Resume Files
           </label>
           <input
@@ -86,19 +92,19 @@ export default function UploadResumePage() {
             accept=".pdf,.doc,.docx,.zip"
             multiple
             onChange={handleFileChange}
-            className="w-full rounded px-3 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-black file:hover:bg-orange-500 file:text-white text-gray-600"
+            className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-600 file:hover:bg-orange-700 file:text-white text-black font-medium focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
           />
         </div>
 
         {/* Job Category */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-black mb-2">
             Job Category *
           </label>
           <select
             value={jobCategory}
-            onChange={(e) => setJobCategory(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-800 focus:ring-2 focus:ring-blue-200"
+            onChange={(e) => setJobCategory(e.target.value as JobCategory)}
+            className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 bg-white text-black font-medium focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
           >
             {JOB_CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>
@@ -110,7 +116,7 @@ export default function UploadResumePage() {
 
         {/* Description */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-black mb-2">
             Description (Optional)
           </label>
           <textarea
@@ -118,19 +124,36 @@ export default function UploadResumePage() {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Add a description for this batch of resumes..."
             rows={3}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 bg-white text-black font-medium placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
           />
         </div>
 
         <button
           onClick={handleUpload}
           disabled={loading || files.length === 0}
-          className="w-full bg-black hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition disabled:bg-gray-300"
+          className="btn-primary w-full py-4 rounded-xl font-bold text-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? "Uploading..." : "Upload"}
+          {loading ? (
+            <div className="flex items-center justify-center space-x-2">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <span>Uploading...</span>
+            </div>
+          ) : (
+            'Upload Resumes'
+          )}
         </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-        {successMsg && <p className="text-green-600 mt-4">{successMsg}</p>}
+        
+        {error && (
+          <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl font-medium">
+            {error}
+          </div>
+        )}
+        
+        {successMsg && (
+          <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl font-medium">
+            {successMsg}
+          </div>
+        )}
         {/* Show file chips ONLY if files selected & not uploaded */}
         {files.length > 0 && !successMsg && (
           <div className="flex flex-wrap gap-2 mt-3">
@@ -168,6 +191,7 @@ export default function UploadResumePage() {
             </ul>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

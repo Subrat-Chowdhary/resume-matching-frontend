@@ -186,7 +186,7 @@ export default function SearchPage() {
             <select
               className="w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-800 focus:ring-2 focus:ring-blue-200"
               value={jobCategory}
-              onChange={(e) => setJobCategory(e.target.value)}
+              onChange={(e) => setJobCategory(e.target.value as JobCategory | "")}
             >
               <option value="">All Categories</option>
               {JOB_CATEGORIES.map((cat) => (
