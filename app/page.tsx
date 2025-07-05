@@ -4,7 +4,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import PublicLayout from "@/components/Layout/PublicLayout";
+import AuthWrapper from "@/components/Layout/AuthWrapper";
 import { 
   ChartBarIcon, 
   MagnifyingGlassIcon, 
@@ -80,14 +80,14 @@ export default function Home() {
   };
 
   return (
-    <PublicLayout>
+    <AuthWrapper>
       <div className="p-6 lg:p-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">
+          <h1 className="text-3xl font-bold text-white mb-2">
             Welcome back, {session?.user?.name}! 👋
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-white text-lg">
             Your AI-powered resume matching platform is ready to help you find the perfect candidates.
           </p>
         </div>
@@ -181,6 +181,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </PublicLayout>
+    </AuthWrapper>
   );
 }

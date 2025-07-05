@@ -26,7 +26,7 @@ export default function HealthPage() {
   }, []);
 
   return (
-    <div style={{ padding: 40, fontFamily: "sans-serif" }}>
+    <div style={{ padding: 40, fontFamily: "sans-serif" }} className="text-white">
       <h1>Backend Health Check (FastAPI)</h1>
       {loading ? (
         <p>Loading...</p>

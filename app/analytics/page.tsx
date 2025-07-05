@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useAnalytics } from '@/lib/hooks/useAnalytics';
-import ModernLayout from '@/components/Layout/ModernLayout';
+import AuthWrapper from '@/components/Layout/AuthWrapper';
 import { 
   BarChart, 
   Bar, 
@@ -96,13 +96,22 @@ export default function AnalyticsPage() {
     }
   };
 
-  if (status === 'loading' || loading) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     );
   }
+
+  // if (status === 'loading' || loading) {
+  //   return (
+  //       <div></div>
+  //     // <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+  //     //   <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+  //     // </div>
+  //   );
+  // }
 
   if (status === 'unauthenticated') {
     return (
@@ -138,14 +147,14 @@ export default function AnalyticsPage() {
   }));
 
   return (
-    <ModernLayout>
+    <AuthWrapper>
       <div className="p-6 lg:p-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-black">Analytics Dashboard</h1>
-              <p className="text-gray-600 mt-2 font-medium">Track your platform usage and activity insights</p>
+              <h1 className="text-3xl font-bold text-white">Analytics Dashboard</h1>
+              <p className="text-gray-600 mt-2 font-medium text-white">Track your platform usage and activity insights</p>
             </div>
             <div className="flex items-center space-x-4">
               <select
@@ -295,11 +304,12 @@ export default function AnalyticsPage() {
                   labelLine={false}
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
-                  fill="#8884d8"
+                  fill="#FF7722"
                   dataKey="value"
+                  className='text-orange-600'
                 >
                   {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={`cell-${index}`} fill="#EA580C" />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -360,6 +370,6 @@ export default function AnalyticsPage() {
           </div>
         </div>
       </div>
-    </ModernLayout>
+    </AuthWrapper>
   );
 }

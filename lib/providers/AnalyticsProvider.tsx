@@ -21,19 +21,19 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
   const analytics = useAnalytics();
 
-  // Auto-track page visibility changes
-  useEffect(() => {
-    if (status !== 'authenticated') return;
+  // Auto-track page visibility changes (disabled to prevent infinite loops)
+  // useEffect(() => {
+  //   if (status !== 'authenticated') return;
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        analytics.trackPageView(window.location.pathname);
-      }
-    };
+  //   const handleVisibilityChange = () => {
+  //     if (document.visibilityState === 'visible') {
+  //       analytics.trackPageView(window.location.pathname);
+  //     }
+  //   };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [status, analytics]);
+  //   document.addEventListener('visibilitychange', handleVisibilityChange);
+  //   return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  // }, [status, analytics]);
 
   return (
     <AnalyticsContext.Provider value={analytics}>

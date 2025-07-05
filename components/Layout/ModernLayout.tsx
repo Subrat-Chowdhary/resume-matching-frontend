@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAnalyticsContext } from '@/lib/providers/AnalyticsProvider';
 import logo from '@/public/ahom.png';
 import {
   Bars3Icon,
@@ -37,6 +38,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const analytics = useAnalyticsContext();
 
   // Check if mobile
   useEffect(() => {
@@ -51,6 +53,17 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Track page views when pathname changes (with debouncing)
+  useEffect(() => {
+    if (status === 'authenticated' && analytics.sessionId) {
+      const timeoutId = setTimeout(() => {
+        analytics.trackPageView(pathname);
+      }, 500); // Debounce for 500ms
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [pathname, status]); // Remove analytics from dependencies
 
   // Navigation items
   const navItems: NavItem[] = [
@@ -73,20 +86,28 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
     }
   };
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: 'http://157.180.44.51:3000' });
+  const handleLogout = async () => {
+    // Track logout activity before signing out
+    if (analytics.sessionId) {
+      await analytics.trackActivity({
+        activityType: 'LOGOUT',
+        description: 'User logged out',
+        pageUrl: pathname,
+      });
+    }
+    signOut({ callbackUrl: '/login' });
   };
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-          <p className="text-gray-600 font-medium">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  // if (status === 'loading') {
+  //   return (
+  //     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+  //       <div className="flex flex-col items-center space-y-4">
+  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+  //         <p className="text-gray-600 font-medium">Loading...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (status === 'unauthenticated') {
     return (
@@ -106,7 +127,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div 
@@ -124,15 +145,24 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
         }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-70 bg-white shadow-xl
+          fixed lg:static inset-y-0 left-0 z-50 w-70 h-screen bg-white shadow-xl
           flex flex-col border-r border-gray-200
           ${isMobile ? 'lg:translate-x-0' : ''}
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            {/* <Image src={logo} width={40} height={40} alt="Logo" className="rounded-lg" /> */}
+        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
+          <div className="flex flex-row items-center space-x-2">
+            {/* <Image src={logo} width={60} height={30} alt="Logo" className="rounded-md" /> */}
+
+            <Image
+              src={logo}
+              width={60}
+              height={30}
+              alt="Logo"
+              className="rounded-md cursor-pointer"
+              onClick={() => router.push('/')}
+            />
             <div>
               <h1 className="text-xl font-bold text-black">
                 <span className="text-orange-600">AI</span> Resume
@@ -210,7 +240,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
           <div className="mt-4 space-y-2">
             <button className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
               <Cog6ToothIcon className="h-4 w-4" />
-              <span>Settings</span>
+              <span className='font-bold'>Settings</span>
             </button>
             
             <button 
@@ -218,7 +248,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
               className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             >
               <ArrowRightOnRectangleIcon className="h-4 w-4" />
-              <span>Sign Out</span>
+              <span className='font-bold'>Sign Out</span>
             </button>
           </div>
         </div>
@@ -240,14 +270,39 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
               )}
               
               <div>
-                <h2 className="text-xl font-bold text-black">
-                  {pathname === '/analytics' && 'Analytics Dashboard'}
-                  {pathname === '/search' && 'Resume Search'}
-                  {pathname === '/upload' && 'Upload Resumes'}
-                  {pathname === '/health' && 'System Health'}
-                  {pathname === '/test-analytics' && 'Analytics Testing'}
-                  {pathname === '/' && 'Dashboard'}
-                </h2>
+                  <h2 className="text-xl font-bold text-black">
+                    {pathname === '/analytics' && (
+                      <>
+                        <span className="text-orange-600">Analytics</span> Dashboard
+                      </>
+                    )}
+                    {pathname === '/search' && (
+                      <>
+                        <span className="text-orange-600">Resume</span> Search
+                      </>
+                    )}
+                    {pathname === '/upload' && (
+                      <>
+                        <span className="text-orange-600">Upload</span> Resumes
+                      </>
+                    )}
+                    {pathname === '/health' && (
+                      <>
+                        <span className="text-orange-600">System</span> Health
+                      </>
+                    )}
+                    {pathname === '/test-analytics' && (
+                      <>
+                        <span className="text-orange-600">Analytics</span> Testing
+                      </>
+                    )}
+                    {pathname === '/' && (
+                      <>
+                        <span className="text-orange-600">Dashboard</span>
+                      </>
+                    )}
+                  </h2>
+
                 <p className="text-sm text-gray-600">
                   {pathname === '/analytics' && 'Monitor your platform usage and insights'}
                   {pathname === '/search' && 'Find the perfect candidates'}
@@ -274,7 +329,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto bg-black">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}

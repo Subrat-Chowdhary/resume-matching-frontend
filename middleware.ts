@@ -5,6 +5,9 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request });
   const { pathname } = request.nextUrl;
+  
+  // Debug logging (remove in production)
+  // console.log(`[Middleware] Path: ${pathname}, Token exists: ${!!token}, User ID: ${token?.sub || 'none'}`);
 
   // Skip middleware for static files and API auth routes
   if (
@@ -16,33 +19,36 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // If user is authenticated, track page views
-  if (token && token.sub) {
-    const response = NextResponse.next();
-    
-    // Add headers for analytics tracking
-    response.headers.set('x-user-id', token.sub);
-    response.headers.set('x-page-url', pathname);
-    response.headers.set('x-timestamp', new Date().toISOString());
-    
-    return response;
-  }
-
-  // Allow access to login and register pages
-  if (pathname === '/login' || pathname === '/register') {
-    return NextResponse.next();
-  }
-
-  // Redirect to login for protected routes (only analytics and test pages)
-  const protectedRoutes = ['/analytics', '/test-analytics'];
+  // Public routes that don't require authentication
+  const publicRoutes = ['/login', '/register'];
   
-  if (protectedRoutes.some(route => pathname.startsWith(route))) {
+  // If user is not authenticated
+  if (!token || !token.sub) {
+    // Allow access to public routes
+    if (publicRoutes.includes(pathname)) {
+      return NextResponse.next();
+    }
+    
+    // Redirect to login for all other routes
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  // If user is authenticated but trying to access login/register, redirect to dashboard
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // User is authenticated and accessing protected routes
+  const response = NextResponse.next();
+  
+  // Add headers for analytics tracking
+  response.headers.set('x-user-id', token.sub);
+  response.headers.set('x-page-url', pathname);
+  response.headers.set('x-timestamp', new Date().toISOString());
+  
+  return response;
 }
 
 export const config = {

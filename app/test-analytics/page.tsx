@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useAnalytics } from '@/lib/hooks/useAnalytics';
-import ModernLayout from '@/components/Layout/ModernLayout';
+import AuthWrapper from '@/components/Layout/AuthWrapper';
 
 export default function TestAnalyticsPage() {
   const { data: session, status } = useSession();
@@ -104,7 +104,7 @@ export default function TestAnalyticsPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     );
@@ -122,7 +122,7 @@ export default function TestAnalyticsPage() {
   }
 
   return (
-    <ModernLayout>
+    <AuthWrapper>
       <div className="p-6 lg:p-8 max-w-6xl mx-auto">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
           <h1 className="text-3xl font-bold text-black mb-4">🧪 Analytics System Test</h1>
@@ -222,6 +222,6 @@ export default function TestAnalyticsPage() {
           </div>
         </div>
       </div>
-    </ModernLayout>
+    </AuthWrapper>
   );
 }

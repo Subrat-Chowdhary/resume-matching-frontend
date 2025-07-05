@@ -19,17 +19,23 @@ function LoginForm() {
     setError("");
     setLoading(true);
     
+    // console.log('[Login] Attempting login with:', { email, callbackUrl });
+    
     const res = await signIn("credentials", {
       email,
       password,
       redirect: false
     });
     
+    // console.log('[Login] SignIn response:', res);
+    
     setLoading(false);
     
     if (res?.error) {
+      // console.log('[Login] Error:', res.error);
       setError("Invalid email or password");
     } else if (res?.ok) {
+      // console.log('[Login] Success! Redirecting to:', callbackUrl);
       // Successful login - redirect to callback URL or home
       router.push(callbackUrl);
       router.refresh(); // Force refresh to update session
@@ -39,7 +45,7 @@ function LoginForm() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-gray-100">
       <div className="flex flex-col max-w-md w-full mx-auto p-8 bg-white items-center justify-center rounded-2xl shadow-xl border border-gray-200">
-        <Image alt="Logo" src={Logo} className="w-20 h-20 mb-6 rounded-xl" />
+        <Image alt="Logo" src={Logo} className="w-60 h-20 mb-6 rounded-xl" />
         <h1 className="text-black text-3xl mb-2 font-bold">
           <span className="text-orange-600">AI</span> Resume Matcher
         </h1>

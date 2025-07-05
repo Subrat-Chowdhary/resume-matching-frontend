@@ -1,9 +1,9 @@
-import PublicLayout from '@/components/Layout/PublicLayout';
+import AuthWrapper from '@/components/Layout/AuthWrapper';
 
 export default function HealthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <PublicLayout>{children}</PublicLayout>;
+  return <AuthWrapper>{children}</AuthWrapper>;
 }

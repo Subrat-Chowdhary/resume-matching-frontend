@@ -314,7 +314,7 @@ export default function SearchPage() {
         {!loading && uniqueResults.length === 0 && (
           <div className="col-span-full text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
-            <p className="text-gray-500 text-lg mb-2">
+            <p className="text-gray-500 text-lg mb-4 text-white">
               {query
                 ? "No matching resumes found."
                 : "Enter a Job Description above to start searching."}

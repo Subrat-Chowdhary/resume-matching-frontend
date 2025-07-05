@@ -58,6 +58,7 @@ export function useAnalytics(): UseAnalyticsReturn {
   const { data: session, status } = useSession();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [pageStartTime, setPageStartTime] = useState<number>(Date.now());
+  const [isTracking, setIsTracking] = useState<boolean>(false);
 
   // Initialize session when user logs in
   useEffect(() => {
@@ -66,32 +67,26 @@ export function useAnalytics(): UseAnalyticsReturn {
     }
   }, [status, session, sessionId]);
 
-  // Track page changes and time spent
+  // Track page changes and time spent (simplified to prevent loops)
   useEffect(() => {
+    if (!sessionId) return;
+    
     const handleBeforeUnload = () => {
-      if (sessionId) {
-        const timeSpent = Math.floor((Date.now() - pageStartTime) / 1000);
-        trackTimeSpent(timeSpent, window.location.pathname);
-      }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && sessionId) {
-        const timeSpent = Math.floor((Date.now() - pageStartTime) / 1000);
-        trackTimeSpent(timeSpent, window.location.pathname);
-      } else if (document.visibilityState === 'visible') {
-        setPageStartTime(Date.now());
+      const timeSpent = Math.floor((Date.now() - pageStartTime) / 1000);
+      if (timeSpent > 5) { // Only track if spent more than 5 seconds
+        navigator.sendBeacon('/api/analytics/activity', JSON.stringify({
+          activityType: 'PAGE_VIEW',
+          description: `Time spent: ${timeSpent}s`,
+          timeSpent,
+          pageUrl: window.location.pathname,
+          sessionId,
+        }));
       }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [sessionId, pageStartTime]);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sessionId]); // Remove pageStartTime dependency
 
   // End session when user logs out
   useEffect(() => {
@@ -152,8 +147,20 @@ export function useAnalytics(): UseAnalyticsReturn {
   };
 
   const trackActivity = useCallback(async (activityData: ActivityData) => {
-    if (!sessionId || status !== 'authenticated') return;
+    if (!sessionId || status !== 'authenticated' || isTracking) return;
 
+    // Prevent duplicate calls for the same activity within a short time
+    const activityKey = `${activityData.activityType}-${activityData.pageUrl}`;
+    const now = Date.now();
+    const lastCall = localStorage.getItem(`lastActivity-${activityKey}`);
+    
+    if (lastCall && (now - parseInt(lastCall)) < 2000) {
+      return; // Skip if same activity was called within 2 seconds
+    }
+    
+    localStorage.setItem(`lastActivity-${activityKey}`, now.toString());
+    setIsTracking(true);
+    
     try {
       await fetch('/api/analytics/activity', {
         method: 'POST',
@@ -167,8 +174,10 @@ export function useAnalytics(): UseAnalyticsReturn {
       });
     } catch (error) {
       console.error('Error tracking activity:', error);
+    } finally {
+      setTimeout(() => setIsTracking(false), 500);
     }
-  }, [sessionId, status]);
+  }, [sessionId, status, isTracking]);
 
   const checkUsage = useCallback(async (type: 'search' | 'download'): Promise<UsageInfo> => {
     try {
