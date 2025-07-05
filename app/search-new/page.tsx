@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { API_ENDPOINTS, type SearchResult, type SearchResponse, extractCandidateName, extractFirstLastName } from "@/lib/api";
 
 export default function SearchNewPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,26 +23,22 @@ export default function SearchNewPage() {
     setResults([]);
 
     try {
-      const response = await fetch(
-        `http://157.180.44.51:8000/search/search?query=${encodeURIComponent(
-          trimmedQuery
-        )}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            // Add Authorization header here if backend requires token
-            // "Authorization": `Bearer YOUR_TOKEN_HERE`
-          },
-        }
-      );
+      const formData = new FormData();
+      formData.append("query", trimmedQuery);
+      formData.append("limit", "10");
+      formData.append("similarity_threshold", "0.7");
+
+      const response = await fetch(API_ENDPOINTS.SEARCH_PROFILE, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
       try {
-        const data = await response.json();
+        const data: SearchResponse = await response.json();
         setResults(data.results || []);
       } catch {
         throw new Error("Failed to parse server response.");
@@ -93,11 +90,94 @@ export default function SearchNewPage() {
         )}
 
         {results.length > 0 && (
-          <ul>
-            {results.map((item, idx) => (
-              <li key={idx}>{JSON.stringify(item)}</li>
-            ))}
-          </ul>
+          <div style={{ marginTop: 20 }}>
+            <h3>Search Results:</h3>
+            {results.map((item, idx) => {
+              const candidateName = extractCandidateName(item.filename);
+              const { firstName, lastName } = extractFirstLastName(item.filename);
+              
+              return (
+                <div key={item.id || idx} style={{ 
+                  border: "1px solid #ddd", 
+                  padding: 20, 
+                  margin: "15px 0", 
+                  borderRadius: 12,
+                  backgroundColor: "#fff",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                }}>
+                  {/* Header with candidate info */}
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
+                    <div style={{
+                      width: 40,
+                      height: 40,
+                      backgroundColor: "#4F46E5",
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginRight: 12,
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: 14
+                    }}>
+                      {firstName.charAt(0)}{lastName.charAt(0) || firstName.charAt(1) || ''}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ margin: "0 0 4px 0", color: "#333", fontSize: 18, fontWeight: "bold" }}>
+                        {candidateName}
+                      </h4>
+                      <p style={{ margin: 0, fontSize: 12, color: "#666" }}>
+                        {item.filename}
+                      </p>
+                    </div>
+                    <div style={{
+                      backgroundColor: "#10B981",
+                      color: "white",
+                      padding: "4px 12px",
+                      borderRadius: 20,
+                      fontSize: 12,
+                      fontWeight: "bold"
+                    }}>
+                      {(item.similarity_score * 100).toFixed(1)}%
+                    </div>
+                  </div>
+
+                  {/* Details */}
+                  <div style={{ marginBottom: 15 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                      <span style={{ fontSize: 14, color: "#666" }}>Category:</span>
+                      <span style={{ 
+                        fontSize: 14, 
+                        fontWeight: "500", 
+                        backgroundColor: "#F3F4F6", 
+                        padding: "2px 8px", 
+                        borderRadius: 4 
+                      }}>
+                        {item.job_category}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <span style={{ fontSize: 14, color: "#666" }}>Uploaded:</span>
+                      <span style={{ fontSize: 14, color: "#333" }}>
+                        {new Date(item.upload_timestamp).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Preview */}
+                  <div style={{ 
+                    borderTop: "1px solid #E5E7EB", 
+                    paddingTop: 12,
+                    fontSize: 12, 
+                    color: "#666",
+                    lineHeight: 1.5
+                  }}>
+                    {item.text_preview}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
