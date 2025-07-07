@@ -95,7 +95,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
         pageUrl: pathname,
       });
     }
-    signOut({ callbackUrl: '/login' });
+    signOut({ callbackUrl: window.location.origin + '/login' });
   };
 
   // if (status === 'loading') {

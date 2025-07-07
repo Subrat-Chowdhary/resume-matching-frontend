@@ -26,8 +26,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-900 to-gray-900">
-        <div className="flex flex-col max-w-sm w-full mx-auto p-4 bg-white text-black items-center justify-center rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-gray-100">
+        <div className="flex flex-col max-w-md w-full mx-auto p-8 bg-white items-center justify-center rounded-2xl shadow-xl border border-gray-200">
         <Image alt="Logo" src={Logo} className="w-3/4 h-auto mb-4" />
         <h1 className="text-gray-800 text-3xl mb-4"><span className="text-orange-600 font-bold">AI</span> Resume Matcher</h1>
         
