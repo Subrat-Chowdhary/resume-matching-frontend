@@ -4,8 +4,10 @@ import React, { useRef, useState } from "react";
 import { API_ENDPOINTS, JOB_CATEGORIES, type JobCategory, type UploadResponse } from "@/lib/api";
 
 type UploadResult = {
-  filename: string;
-  status: string;
+  original_filename: string;
+  unique_filename: string;
+  file_size: number;
+  upload_timestamp: string;
 };
 
 export default function UploadResumePage() {
@@ -50,19 +52,34 @@ export default function UploadResumePage() {
       });
       const data: UploadResponse = await res.json();
 
-      if (data.status === "success" && typeof data.files_uploaded === "number") {
-        setSuccessMsg(`${data.files_uploaded} file(s) uploaded successfully!`);
-        setFiles([]); // clear state
-        setDescription("");
-        if (fileInputRef.current) fileInputRef.current.value = ""; // clear input UI
-      } else if (Array.isArray(data.result)) {
-        setResults(data.result);
-        setSuccessMsg("Files uploaded!");
+      if (data.message === "Upload completed") {
+        // Create success message
+        let successMessage = `🎉 Upload Successful!\n`;
+        successMessage += `✅ ${data.successful_uploads} file(s) uploaded successfully`;
+        
+        if (data.failed_uploads > 0) {
+          successMessage += `\n❌ ${data.failed_uploads} file(s) failed`;
+        }
+        
+        successMessage += `\n📁 Category: ${data.job_category}`;
+        
+        setSuccessMsg(successMessage);
+        
+        // Set results for detailed view
+        setResults(data.uploaded_files.map(file => ({
+          original_filename: file.original_filename,
+          unique_filename: file.unique_filename,
+          file_size: file.file_size,
+          upload_timestamp: file.upload_timestamp
+        })));
+        
+        // Clear form
         setFiles([]);
         setDescription("");
         if (fileInputRef.current) fileInputRef.current.value = "";
+        
       } else {
-        setError("Unexpected response: " + JSON.stringify(data));
+        setError(`Upload failed: ${data.message || 'Unknown error'}`);
       }
     } catch (err) {
       setError("Upload failed: " + (err instanceof Error ? err.message : String(err)));
@@ -151,7 +168,7 @@ export default function UploadResumePage() {
         
         {successMsg && (
           <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl font-medium">
-            {successMsg}
+            <pre className="whitespace-pre-line font-medium">{successMsg}</pre>
           </div>
         )}
         {/* Show file chips ONLY if files selected & not uploaded */}
@@ -180,15 +197,22 @@ export default function UploadResumePage() {
         )}
         {results.length > 0 && (
           <div className="mt-6">
-            <h2 className="font-semibold text-lg mb-2 text-slate-700">Upload Results:</h2>
-            <ul className="space-y-2">
+            <h2 className="font-semibold text-lg mb-3 text-slate-700">📋 Uploaded Files Details:</h2>
+            <div className="space-y-3">
               {results.map((r, i) => (
-                <li key={i} className="border rounded px-3 py-2 bg-green-50 border-green-200 flex justify-between items-center">
-                  <span className="text-slate-700 text-sm">{r.filename}</span>
-                  <span className="text-xs text-green-700">{r.status}</span>
-                </li>
+                <div key={i} className="border rounded-lg px-4 py-3 bg-green-50 border-green-200">
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-slate-800 font-medium text-sm">{r.original_filename}</span>
+                    <span className="text-xs text-green-700 bg-green-100 px-2 py-1 rounded-full">✅ Success</span>
+                  </div>
+                  <div className="text-xs text-slate-600 space-y-1">
+                    <div>📁 Stored as: {r.unique_filename}</div>
+                    <div>📊 Size: {(r.file_size / 1024).toFixed(1)} KB</div>
+                    <div>🕒 Uploaded: {new Date(r.upload_timestamp).toLocaleString()}</div>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
         </div>

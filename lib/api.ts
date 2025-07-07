@@ -5,7 +5,7 @@ export const API_BASE_URL = "http://157.180.44.51:8000";
 export const API_ENDPOINTS = {
   UPLOAD_PROFILE: `${API_BASE_URL}/upload_profile`,
   SEARCH_PROFILE: `${API_BASE_URL}/search_profile`,
-  DOWNLOAD_RESUME: `${API_BASE_URL}/download_resume`,
+  DOWNLOAD_RESUME: `/api/download-resume`, // Use Next.js API route instead of backend
   HEALTH: `${API_BASE_URL}/health`,
 } as const;
 
@@ -25,12 +25,26 @@ export type JobCategory = typeof JOB_CATEGORIES[number];
 
 // API Types
 export interface UploadResponse {
-  status: string;
-  files_uploaded?: number;
-  result?: Array<{
-    filename: string;
-    status: string;
+  message: string;
+  job_category: string;
+  total_files_processed: number;
+  successful_uploads: number;
+  failed_uploads: number;
+  uploaded_files: Array<{
+    original_filename: string;
+    unique_filename: string;
+    job_category: string;
+    minio_path: string;
+    embedding_id: string;
+    file_size: number;
+    upload_timestamp: string;
   }>;
+  failed_files: Array<{
+    filename: string;
+    error: string;
+  }>;
+  description?: string;
+  timestamp: string;
 }
 
 export interface SearchResult {

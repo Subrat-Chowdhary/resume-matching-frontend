@@ -3,23 +3,44 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
-  const { name, email, password } = await req.json();
+  try {
+    const { name, email, password } = await req.json();
 
-  if (!name || !email || !password)
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    if (!name || !email || !password) {
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    }
 
-  const exist = await prisma.user.findUnique({ where: { email } });
-  if (exist)
-    return NextResponse.json({ error: "Email already exists" }, { status: 400 });
+    const exist = await prisma.user.findUnique({ where: { email } });
 
-  const hashed = await bcrypt.hash(password, 10);
+    if (exist) {
+      return NextResponse.json({ error: "Email already exists" }, { status: 400 });
+    }
 
-  const user = await prisma.user.create({
-    data: { name, email, password: hashed, role: "user" }
-  });
+    const hashed = await bcrypt.hash(password, 10);
 
-  return NextResponse.json({
-    msg: "Registered",
-    user: { id: user.id, name: user.name, email: user.email, role: user.role }
-  });
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashed,
+        role: "user",
+      },
+    });
+
+    return NextResponse.json({
+      msg: "Registered",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Register API error:", error);
+    return NextResponse.json(
+      { error: "Something went wrong on the server" },
+      { status: 500 }
+    );
+  }
 }
