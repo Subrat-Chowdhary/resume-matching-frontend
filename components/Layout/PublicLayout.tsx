@@ -19,6 +19,7 @@ import {
   BellIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
+import ThemeToggle from '@/components/UI/ThemeToggle';
 
 interface PublicLayoutProps {
   children: React.ReactNode;
@@ -88,7 +89,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div 
@@ -106,18 +107,18 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-70 bg-white shadow-xl
-          flex flex-col border-r border-gray-200
+          fixed lg:static inset-y-0 left-0 z-50 w-70 bg-white dark:bg-gray-800 shadow-xl
+          flex flex-col border-r border-gray-200 dark:border-gray-700
           ${isMobile ? 'lg:translate-x-0' : ''}
         `}
       >
         {/* Header */}
-        <div className="flex flex-col items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex flex-col items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <Image src={logo} width={200} height={80} alt="Logo" className="rounded-lg" />
           <div className="flex items-center space-x-3">
             <div>
-              <h1 className="text-xl font-bold text-black">
-                <span className="text-orange-600">AI</span> Resume Matcher
+              <h1 className="text-xl font-bold text-black dark:text-white">
+                <span className="text-orange-600 dark:text-orange-400">AI</span> Resume Matcher
               </h1>
               
             </div>
@@ -126,7 +127,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
           {isMobile && (
             <button
               onClick={() => setSidebarOpen(false)}
-              className="p-2 rounded-lg hover:bg-gray-100 text-gray-600"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400"
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
@@ -150,10 +151,10 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   w-full flex items-center justify-between px-4 py-3 rounded-xl text-left
                   font-medium transition-all duration-200 group
                   ${isActive 
-                    ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/25' 
+                    ? 'bg-orange-600 dark:bg-orange-500 text-white shadow-lg shadow-orange-600/25' 
                     : isDisabled
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
+                    ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-600 dark:hover:text-orange-400'
                   }
                 `}
               >
@@ -162,12 +163,12 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                     isActive 
                       ? 'text-white' 
                       : isDisabled 
-                      ? 'text-gray-400' 
-                      : 'text-gray-500 group-hover:text-orange-600'
+                      ? 'text-gray-400 dark:text-gray-500' 
+                      : 'text-gray-500 dark:text-gray-400 group-hover:text-orange-600 dark:group-hover:text-orange-400'
                   }`} />
                   <span className="font-semibold">{item.name}</span>
                   {isDisabled && (
-                    <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
+                    <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-full">
                       Login Required
                     </span>
                   )}
@@ -176,7 +177,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 {item.badge && !isDisabled && (
                   <span className={`
                     px-2 py-1 text-xs font-bold rounded-full
-                    ${isActive ? 'bg-white text-orange-600' : 'bg-orange-100 text-orange-600'}
+                    ${isActive ? 'bg-white text-orange-600' : 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'}
                   `}>
                     {item.badge}
                   </span>
@@ -187,33 +188,38 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         </nav>
 
         {/* User Profile Section */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           {status === 'authenticated' && session ? (
             <>
-              <div className="flex items-center space-x-3 p-3 rounded-xl bg-gray-50">
-                <UserCircleIcon className="h-10 w-10 text-gray-600" />
+              <div className="flex items-center space-x-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700">
+                <UserCircleIcon className="h-10 w-10 text-gray-600 dark:text-gray-400" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-black truncate">
+                  <p className="text-sm font-semibold text-black dark:text-white truncate">
                     {session.user?.name}
                   </p>
-                  <p className="text-xs text-gray-600 truncate">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
                     {session.user?.email}
                   </p>
-                  <p className="text-xs text-orange-600 font-medium">
+                  <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
                     {session.user?.role || 'User'}
                   </p>
                 </div>
               </div>
 
+              {/* Theme Toggle */}
+              <div className="mt-4 flex justify-center">
+                <ThemeToggle />
+              </div>
+
               <div className="mt-4 space-y-2">
-                <button className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                <button className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
                   <Cog6ToothIcon className="h-4 w-4" />
                   <span>Settings</span>
                 </button>
                 
                 <button 
                   onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                 >
                   <ArrowRightOnRectangleIcon className="h-4 w-4" />
                   <span>Sign Out</span>
@@ -222,8 +228,13 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
             </>
           ) : (
             <div className="space-y-3">
-              <div className="text-center p-4 bg-orange-50 rounded-xl">
-                <p className="text-sm text-gray-600 mb-3">
+              {/* Theme Toggle for non-authenticated users */}
+              <div className="flex justify-center mb-4">
+                <ThemeToggle />
+              </div>
+              
+              <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                   Sign in to access all features
                 </p>
                 <button
@@ -241,20 +252,20 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
       {/* Main Content */}
       <div className={`flex-1 flex flex-col ${isMobile ? 'w-full' : 'lg:ml-0'}`}>
         {/* Top Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200 px-4 lg:px-6 py-4">
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               {isMobile && (
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 lg:hidden"
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 lg:hidden"
                 >
                   <Bars3Icon className="h-6 w-6" />
                 </button>
               )}
               
               <div>
-                <h2 className="text-xl font-bold text-black">
+                <h2 className="text-xl font-bold text-black dark:text-white">
                   {pathname === '/analytics' && 'Analytics Dashboard'}
                   {pathname === '/search' && 'Resume Search'}
                   {pathname === '/upload' && 'Upload Resumes'}
@@ -262,7 +273,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   {pathname === '/test-analytics' && 'Analytics Testing'}
                   {pathname === '/' && 'Dashboard'}
                 </h2>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {pathname === '/analytics' && 'Monitor your platform usage and insights'}
                   {pathname === '/search' && 'Find the perfect candidates'}
                   {pathname === '/upload' && 'Add new resumes to the database'}
@@ -276,14 +287,14 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
             <div className="flex items-center space-x-3">
               {status === 'authenticated' && (
                 <>
-                  <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 relative">
+                  <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 relative">
                     <BellIcon className="h-6 w-6" />
-                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-orange-600 rounded-full"></span>
+                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-orange-600 dark:bg-orange-500 rounded-full"></span>
                   </button>
                   
                   <div className="hidden sm:block text-right">
-                    <p className="text-sm font-semibold text-black">{session?.user?.name}</p>
-                    <p className="text-xs text-gray-600">{session?.user?.role || 'User'}</p>
+                    <p className="text-sm font-semibold text-black dark:text-white">{session?.user?.name}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{session?.user?.role || 'User'}</p>
                   </div>
                 </>
               )}
@@ -301,7 +312,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
