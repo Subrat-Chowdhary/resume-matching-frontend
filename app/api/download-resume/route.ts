@@ -3,7 +3,7 @@ import { Client as MinioClient } from "minio";
 
 // MinIO configuration
 const minioClient = new MinioClient({
-  endPoint: '157.180.44.51',
+  endPoint: 'localhost',
   port: 9000,
   useSSL: false,
   accessKey: process.env.MINIO_ACCESS_KEY || 'minioadmin',

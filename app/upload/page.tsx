@@ -1,48 +1,43 @@
 // File: /opt/resume-matching-system/frontend/app/upload/page.tsx
 "use client";
 import React, { useRef, useState } from "react";
-import { API_ENDPOINTS, JOB_CATEGORIES, type JobCategory, type UploadResponse } from "@/lib/api";
-
-type UploadResult = {
-  original_filename: string;
-  unique_filename: string;
-  file_size: number;
-  upload_timestamp: string;
-};
+import { 
+  API_ENDPOINTS, 
+  type UploadResponse, 
+  type UploadedFile, 
+  type RejectedFile,
+  formatFileSize,
+  formatUploadTimestamp,
+  extractCleanName
+} from "@/lib/api";
 
 export default function UploadResumePage() {
   const [files, setFiles] = useState<File[]>([]);
-  const [jobCategory, setJobCategory] = useState<JobCategory>("Backend");
-  const [description, setDescription] = useState<string>("");
-  const [results, setResults] = useState<UploadResult[]>([]);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [jobRole, setJobRole] = useState<string>("");
+  const [uploadResponse, setUploadResponse] = useState<UploadResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiles(e.target.files ? Array.from(e.target.files) : []);
-    setResults([]);
+    setUploadResponse(null);
     setError(null);
-    setSuccessMsg(null);
   };
 
   const handleUpload = async () => {
     if (files.length === 0) {
       setError("Select at least one file.");
-      setSuccessMsg(null);
       return;
     }
     setLoading(true);
     setError(null);
-    setSuccessMsg(null);
-    setResults([]);
+    setUploadResponse(null);
 
     const formData = new FormData();
     files.forEach((f) => formData.append("files", f));
-    formData.append("job_category", jobCategory);
-    if (description.trim()) {
-      formData.append("description", description.trim());
+    if (jobRole.trim()) {
+      formData.append("job_role", jobRole.trim());
     }
 
     try {
@@ -52,34 +47,16 @@ export default function UploadResumePage() {
       });
       const data: UploadResponse = await res.json();
 
-      if (data.message === "Upload completed") {
-        // Create success message
-        let successMessage = `🎉 Upload Successful!\n`;
-        successMessage += `✅ ${data.successful_uploads} file(s) uploaded successfully`;
-        
-        if (data.failed_uploads > 0) {
-          successMessage += `\n❌ ${data.failed_uploads} file(s) failed`;
-        }
-        
-        successMessage += `\n📁 Category: ${data.job_category}`;
-        
-        setSuccessMsg(successMessage);
-        
-        // Set results for detailed view
-        setResults(data.uploaded_files.map(file => ({
-          original_filename: file.original_filename,
-          unique_filename: file.unique_filename,
-          file_size: file.file_size,
-          upload_timestamp: file.upload_timestamp
-        })));
+      if (res.ok && data.success) {
+        setUploadResponse(data);
         
         // Clear form
         setFiles([]);
-        setDescription("");
+        setJobRole("");
         if (fileInputRef.current) fileInputRef.current.value = "";
         
       } else {
-        setError(`Upload failed: ${data.message || 'Unknown error'}`);
+        setError(data.message || `Upload failed: ${res.statusText || 'Unknown error'}`);
       }
     } catch (err) {
       setError("Upload failed: " + (err instanceof Error ? err.message : String(err)));
@@ -113,36 +90,21 @@ export default function UploadResumePage() {
           />
         </div>
 
-        {/* Job Category */}
-        <div className="mb-4">
-          <label className="block text-sm font-semibold text-black mb-2">
-            Job Category *
-          </label>
-          <select
-            value={jobCategory}
-            onChange={(e) => setJobCategory(e.target.value as JobCategory)}
-            className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 bg-white text-black font-medium focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
-          >
-            {JOB_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Description */}
+        {/* Job Role */}
         <div className="mb-6">
           <label className="block text-sm font-semibold text-black mb-2">
-            Description (Optional)
+            Job Role (Optional)
           </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Add a description for this batch of resumes..."
-            rows={3}
+          <input
+            type="text"
+            value={jobRole}
+            onChange={(e) => setJobRole(e.target.value)}
+            placeholder="e.g., Backend Developer, Frontend Engineer, Data Scientist..."
             className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 bg-white text-black font-medium placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Specify the job role to categorize these resumes (optional)
+          </p>
         </div>
 
         <button
@@ -166,24 +128,119 @@ export default function UploadResumePage() {
           </div>
         )}
         
-        {successMsg && (
-          <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl font-medium">
-            <pre className="whitespace-pre-line font-medium">{successMsg}</pre>
+        {uploadResponse && (
+          <div className="mt-4 space-y-4">
+            {/* Success Message */}
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl">
+              <div className="font-medium">{uploadResponse.message}</div>
+              <div className="text-sm mt-1">{uploadResponse.status_message}</div>
+            </div>
+
+            {/* Summary Stats */}
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <h3 className="font-semibold text-blue-800 mb-2">📊 Upload Summary</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-blue-600">Files Submitted:</span>
+                  <span className="font-medium ml-2">{uploadResponse.summary.total_files_submitted}</span>
+                </div>
+                <div>
+                  <span className="text-blue-600">Files Processed:</span>
+                  <span className="font-medium ml-2">{uploadResponse.summary.total_files_processed}</span>
+                </div>
+                <div>
+                  <span className="text-green-600">Successful:</span>
+                  <span className="font-medium ml-2">{uploadResponse.summary.successful_uploads}</span>
+                </div>
+                <div>
+                  <span className="text-red-600">Rejected:</span>
+                  <span className="font-medium ml-2">{uploadResponse.summary.rejected_files}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bucket Info */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+              <h3 className="font-semibold text-gray-800 mb-2">🗂️ Storage Information</h3>
+              <div className="text-sm space-y-1">
+                <div>
+                  <span className="text-gray-600">Bucket:</span>
+                  <span className="font-medium ml-2">{uploadResponse.bucket_info.bucket_name}</span>
+                </div>
+                <div>
+                  <span className="text-gray-600">Status:</span>
+                  <span className="font-medium ml-2">{uploadResponse.bucket_info.status}</span>
+                </div>
+                <div className="text-gray-600">{uploadResponse.bucket_info.message}</div>
+              </div>
+            </div>
+
+            {/* Successfully Uploaded Files */}
+            {uploadResponse.uploaded_files.length > 0 && (
+              <div className="bg-white border border-gray-200 rounded-xl p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">✅ Successfully Uploaded Files</h3>
+                <div className="space-y-3">
+                  {uploadResponse.uploaded_files.map((file, i) => (
+                    <div key={i} className="border rounded-lg px-4 py-3 bg-green-50 border-green-200">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-800">
+                            {extractCleanName(file.original_filename)}
+                          </div>
+                          <div className="text-xs text-gray-600 mt-1">
+                            Original: {file.original_filename}
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            Stored as: {file.unique_filename}
+                          </div>
+                          <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                            <span>📁 {file.bucket_name}</span>
+                            <span>📏 {formatFileSize(file.file_size_mb)}</span>
+                            <span>🕒 {formatUploadTimestamp(file.upload_timestamp)}</span>
+                          </div>
+                        </div>
+                        <span className="text-xs text-green-700 bg-green-100 px-2 py-1 rounded-full whitespace-nowrap">
+                          ✅ {file.status.replace(/_/g, ' ')}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Rejected Files */}
+            {uploadResponse.rejected_files.length > 0 && (
+              <div className="bg-white border border-gray-200 rounded-xl p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">❌ Rejected Files</h3>
+                <div className="space-y-3">
+                  {uploadResponse.rejected_files.map((file, i) => (
+                    <div key={i} className="border rounded-lg px-4 py-3 bg-red-50 border-red-200">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-800">{file.original_filename}</div>
+                          <div className="text-sm text-red-600 mt-1">{file.reason}</div>
+                          {file.error_details && (
+                            <div className="text-xs text-gray-600 mt-1">{file.error_details}</div>
+                          )}
+                        </div>
+                        <span className="text-xs text-red-700 bg-red-100 px-2 py-1 rounded-full whitespace-nowrap">
+                          ❌ Rejected
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
+
         {/* Show file chips ONLY if files selected & not uploaded */}
-        {files.length > 0 && !successMsg && (
+        {files.length > 0 && !uploadResponse && (
           <div className="flex flex-wrap gap-2 mt-3">
             {files.map((f, i) => {
-              let name = f.name.replace(/\.[^/.]+$/, "");
-              name = name.replace(/resume/gi, "");
-              name = name.replace(/[_\-]+/g, " ");
-              name = name
-                .trim()
-                .split(/\s+/)
-                .filter(Boolean)
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join("");
+              const name = extractCleanName(f.name);
               return (
                 <span
                   key={i}
@@ -193,26 +250,6 @@ export default function UploadResumePage() {
                 </span>
               );
             })}
-          </div>
-        )}
-        {results.length > 0 && (
-          <div className="mt-6">
-            <h2 className="font-semibold text-lg mb-3 text-slate-700">📋 Uploaded Files Details:</h2>
-            <div className="space-y-3">
-              {results.map((r, i) => (
-                <div key={i} className="border rounded-lg px-4 py-3 bg-green-50 border-green-200">
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-slate-800 font-medium text-sm">{r.original_filename}</span>
-                    <span className="text-xs text-green-700 bg-green-100 px-2 py-1 rounded-full">✅ Success</span>
-                  </div>
-                  <div className="text-xs text-slate-600 space-y-1">
-                    <div>📁 Stored as: {r.unique_filename}</div>
-                    <div>📊 Size: {(r.file_size / 1024).toFixed(1)} KB</div>
-                    <div>🕒 Uploaded: {new Date(r.upload_timestamp).toLocaleString()}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         )}
         </div>

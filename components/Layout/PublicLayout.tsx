@@ -69,7 +69,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     }
 
     if (path === '/minio') {
-      window.open('http://157.180.44.51:9001/browser/resumes', '_blank');
+      window.open('http://localhost:9001/browser/resumes', '_blank');
     } else {
       router.push(path);
     }
@@ -84,7 +84,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   };
 
   const handleLogout = () => {
-    signOut({ callbackUrl: 'http://157.180.44.51:3000' });
+    signOut({ callbackUrl: 'http://localhost:3000' });
   };
 
   return (

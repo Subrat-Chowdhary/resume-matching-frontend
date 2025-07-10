@@ -73,7 +73,7 @@ export default function Home() {
 
   const handleActionClick = (path: string) => {
     if (path === "/minio") {
-      window.open("http://157.180.44.51:9001/browser/resumes", "_blank");
+      window.open("http://localhost:9001/browser/resumes", "_blank");
     } else {
       router.push(path);
     }
