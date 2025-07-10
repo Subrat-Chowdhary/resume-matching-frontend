@@ -131,18 +131,18 @@ export default function UploadResumePage() {
         {uploadResponse && (
           <div className="mt-4 space-y-4">
             {/* Success Message */}
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl">
+            <div className="bg-green-50 dark:bg-black border border-green-200 text-green-700 px-4 py-3 rounded-xl">
               <div className="font-medium">{uploadResponse.message}</div>
               <div className="text-sm mt-1">{uploadResponse.status_message}</div>
             </div>
 
             {/* Summary Stats */}
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div className="dark:bg-slate-900 bg-gray-50 border border-blue-200 rounded-xl p-4">
               <h3 className="font-semibold text-blue-800 mb-2">📊 Upload Summary</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-blue-600">Files Submitted:</span>
-                  <span className="font-medium ml-2">{uploadResponse.summary.total_files_submitted}</span>
+                  <span className="font-medium ml-2 ">{uploadResponse.summary.total_files_submitted}</span>
                 </div>
                 <div>
                   <span className="text-blue-600">Files Processed:</span>
@@ -179,9 +179,9 @@ export default function UploadResumePage() {
             {uploadResponse.uploaded_files.length > 0 && (
               <div className="bg-white border border-gray-200 rounded-xl p-4">
                 <h3 className="font-semibold text-gray-800 mb-3">✅ Successfully Uploaded Files</h3>
-                <div className="space-y-3">
+                <div className="space-y-3 dark:bg-slate-900">
                   {uploadResponse.uploaded_files.map((file, i) => (
-                    <div key={i} className="border rounded-lg px-4 py-3 bg-green-50 border-green-200">
+                    <div key={i} className="border rounded-lg px-4 py-3 bg-green-50 dark:bg-slate-900 border-green-200">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="font-medium text-gray-800">

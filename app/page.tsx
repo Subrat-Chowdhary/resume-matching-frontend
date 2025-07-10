@@ -84,10 +84,10 @@ export default function Home() {
       <div className="p-6 lg:p-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
+          <h1 className="text-3xl font-bold text-black dark:text-white mb-2">
             Welcome back, {session?.user?.name}! 👋
           </h1>
-          <p className="text-white text-lg">
+          <p className="text-black dark:text-white text-lg">
             Your AI-powered resume matching platform is ready to help you find the perfect candidates.
           </p>
         </div>

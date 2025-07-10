@@ -31,9 +31,9 @@
   --gray-light: #1e293b;
   --gray-medium: #94a3b8;
   --gray-dark: #cbd5e1;
-  --card: #1e293b;
-  --card-foreground: #f8fafc;
-  --border: #334155;
+  --card: #0f172a;
+  --card-foreground: #ffffff;
+  --border: #1e293b;
   --input: #1e293b;
   --ring: #f97316;
   --muted: #0f172a;
@@ -120,6 +120,106 @@ input:focus, textarea:focus, select:focus {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Card styles */
+.card {
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+}
+
+.card-dark {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border: 1px solid #1e293b !important;
+}
+
+/* Dark mode card overrides */
+[data-theme="dark"] .bg-white {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .text-black {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .text-gray-800 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .text-gray-900 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .text-gray-700 {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .border-gray-200 {
+  border-color: #1e293b !important;
+}
+
+[data-theme="dark"] .border-gray-300 {
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .bg-gray-50 {
+  background-color: #1e293b !important;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+  background-color: #334155 !important;
+}
+
+[data-theme="dark"] .bg-gray-200 {
+  background-color: #475569 !important;
+}
+
+/* Table dark mode styles */
+[data-theme="dark"] .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] thead.bg-gray-50 {
+  background-color: #1e293b !important;
+}
+
+[data-theme="dark"] tbody.bg-white {
+  background-color: #0f172a !important;
+}
+
+/* Input and form dark mode styles */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] option {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
+
+/* Label dark mode styles */
+[data-theme="dark"] label {
+  color: #e2e8f0 !important;
 }
 
 /* Mobile responsive utilities */

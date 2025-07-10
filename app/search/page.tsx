@@ -705,14 +705,14 @@ Generated on: ${new Date().toLocaleDateString()}
 
                   {/* Projects Section */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Projects ({selectedResume.projects.length})</h3>
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <h3 className="text-lg font-semibold  mb-3">Projects ({selectedResume.projects.length})</h3>
+                    <div className="border border-gray-200 rounded-lg p-4">
                       {selectedResume.projects.length > 0 ? (
                         <div className="space-y-2">
                           {selectedResume.projects.map((project, index) => (
                             <div
                               key={index}
-                              className="bg-green-50 px-3 py-2 rounded-md text-sm text-gray-700"
+                              className="dark:bg-slate-800 dark:text-gray-800 px-3 py-2 rounded-md text-sm text-gray-700"
                             >
                               {project}
                             </div>

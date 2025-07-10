@@ -60,7 +60,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     { name: 'Search', icon: MagnifyingGlassIcon, path: '/search' },
     { name: 'Analytics', icon: ChartBarIcon, path: '/analytics', badge: 3, requireAuth: true },
     { name: 'Health Check', icon: HeartIcon, path: '/health' },
-    { name: 'MinIO Storage', icon: CubeIcon, path: '/minio' },
+    // { name: 'MinIO Storage', icon: CubeIcon, path: '/minio' },
   ];
 
   const handleNavigation = (path: string, requireAuth?: boolean) => {
@@ -206,10 +206,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 </div>
               </div>
 
-              {/* Theme Toggle */}
-              <div className="mt-4 flex justify-center">
-                <ThemeToggle />
-              </div>
+
 
               <div className="mt-4 space-y-2">
                 <button className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
@@ -228,11 +225,6 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
             </>
           ) : (
             <div className="space-y-3">
-              {/* Theme Toggle for non-authenticated users */}
-              <div className="flex justify-center mb-4">
-                <ThemeToggle />
-              </div>
-              
               <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                   Sign in to access all features
@@ -285,6 +277,9 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div className="flex items-center space-x-3">
+              {/* Theme Toggle */}
+              <ThemeToggle />
+              
               {status === 'authenticated' && (
                 <>
                   <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 relative">

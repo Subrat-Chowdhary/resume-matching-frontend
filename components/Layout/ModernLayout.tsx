@@ -72,7 +72,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
     { name: 'Search', icon: MagnifyingGlassIcon, path: '/search' },
     { name: 'Analytics', icon: ChartBarIcon, path: '/analytics', badge: 3 },
     { name: 'Health Check', icon: HeartIcon, path: '/health' },
-    { name: 'MinIO Storage', icon: CubeIcon, path: '/minio' },
+    // { name: 'MinIO Storage', icon: CubeIcon, path: '/minio' },
   ];
 
   const handleNavigation = (path: string) => {
@@ -237,10 +237,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
             </div>
           </div>
 
-          {/* Theme Toggle */}
-          <div className="mt-4 flex justify-center">
-            <ThemeToggle />
-          </div>
+
 
           {/* Action Buttons */}
           <div className="mt-4 space-y-2">
@@ -321,6 +318,9 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
             </div>
 
             <div className="flex items-center space-x-3">
+              {/* Theme Toggle */}
+              <ThemeToggle />
+              
               <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 relative">
                 <BellIcon className="h-6 w-6" />
                 <span className="absolute -top-1 -right-1 h-3 w-3 bg-orange-600 dark:bg-orange-500 rounded-full"></span>

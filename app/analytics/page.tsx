@@ -153,8 +153,8 @@ export default function AnalyticsPage() {
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-white">Analytics Dashboard</h1>
-              <p className="text-gray-600 mt-2 font-medium text-white">Track your platform usage and activity insights</p>
+              <h1 className="text-3xl font-bold text-black dark:text-white">Analytics Dashboard</h1>
+              <p className="text-gray-600 mt-2 font-medium dark:text-white">Track your platform usage and activity insights</p>
             </div>
             <div className="flex items-center space-x-4">
               <select
