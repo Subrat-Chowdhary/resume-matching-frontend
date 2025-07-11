@@ -13,7 +13,7 @@ export default function HealthPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/health")
+    fetch("http://157.180.44.51:8000/health")
       .then((res) => res.json())
       .then((data) => {
         setHealth(data);
