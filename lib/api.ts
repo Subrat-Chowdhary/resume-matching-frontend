@@ -6,6 +6,8 @@ export const API_ENDPOINTS = {
   UPLOAD_PROFILE: `${API_BASE_URL}/upload_profile`,
   SEARCH_PROFILE: `${API_BASE_URL}/search_profile`,
   DOWNLOAD_RESUME: `/api/download-resume`, // Use Next.js API route instead of backend
+  DOWNLOAD_SELECTED_RESUMES: `${API_BASE_URL}/download_selected_resumes`,
+  GET_TEMPLATES: `${API_BASE_URL}/templates`,
   HEALTH: `${API_BASE_URL}/health`,
 } as const;
 
@@ -26,6 +28,22 @@ export const JOB_CATEGORIES = [
 ] as const;
 
 export type JobCategory = typeof JOB_CATEGORIES[number];
+
+// Resume Template Types
+export const RESUME_TEMPLATES = [
+  "professional",
+  "modern",
+  "compact"
+] as const;
+
+export type ResumeTemplate = typeof RESUME_TEMPLATES[number];
+
+// Template descriptions
+export const TEMPLATE_DESCRIPTIONS = {
+  professional: "Detailed professional format with complete information",
+  modern: "Modern two-column layout with visual appeal",
+  compact: "Compact format with multiple resumes per page"
+} as const;
 
 // API Types
 export interface UploadedFile {

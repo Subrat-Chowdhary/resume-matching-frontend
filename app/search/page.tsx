@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { API_ENDPOINTS, JOB_CATEGORIES, type JobCategory, type SearchResult, type SearchResponse, extractFirstLastName, getInitials, formatSkills, getLatestCompany, truncateText } from "@/lib/api";
+import { API_ENDPOINTS, JOB_CATEGORIES, RESUME_TEMPLATES, TEMPLATE_DESCRIPTIONS, type JobCategory, type ResumeTemplate, type SearchResult, type SearchResponse, extractFirstLastName, getInitials, formatSkills, getLatestCompany, truncateText } from "@/lib/api";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
@@ -17,6 +17,10 @@ export default function SearchPage() {
   const [modalLoading, setModalLoading] = useState(false);
   const [resumeContent, setResumeContent] = useState<string>("");
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<ResumeTemplate>("professional");
+  const [showTemplateOptions, setShowTemplateOptions] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
 
   // remove duplicates by id
   const uniqueResults = useMemo(() => {
@@ -173,87 +177,86 @@ Personal Info: ${resume.personal_info || 'Not available'}
     }
   };
 
-  // Download function - Generate comprehensive resume file
-  const downloadResume = async (resume: SearchResult) => {
-    console.log("Download button clicked for:", resume.name);
+  // Toggle template options
+  const toggleTemplateOptions = () => {
+    setShowTemplateOptions(prev => !prev);
+  };
+
+  // Select template and download
+  const selectTemplateAndDownload = (template: ResumeTemplate) => {
+    setSelectedTemplate(template);
+    if (selectedResume) {
+      downloadResume(selectedResume, template);
+    }
+    setShowTemplateOptions(false);
+  };
+
+  // Download function - Call API to generate and download resume
+  const downloadResume = async (resume: SearchResult, template: ResumeTemplate = selectedTemplate) => {
+    console.log(`Download button clicked for: ${resume.name} with template: ${template}`);
     
     setDownloadLoading(true);
     
     try {
-      // Create comprehensive formatted resume content
-      const resumeText = `
-CANDIDATE PROFILE
-================
-
-Personal Information:
-Name: ${resume.name}
-Email: ${resume.email_id}
-Phone: ${resume.phone_number || 'Not provided'}
-Location: ${resume.location}
-Current Job Title: ${resume.current_job_title}
-
-LinkedIn: ${resume.linkedin_url || 'Not provided'}
-GitHub: ${resume.github_url || 'Not provided'}
-Has Photo: ${resume.has_photo ? 'Yes' : 'No'}
-
-OBJECTIVE
-=========
-${resume.objective}
-
-SKILLS
-======
-${resume.skills.join(', ')}
-
-EXPERIENCE SUMMARY
-==================
-${resume.experience_summary}
-
-QUALIFICATIONS
-==============
-${resume.qualifications_summary}
-
-COMPANIES WORKED WITH
-=====================
-${resume.companies_worked_with_duration.join('\n')}
-
-PROJECTS
-========
-${resume.projects.length > 0 ? resume.projects.join('\n') : 'No projects listed'}
-
-CERTIFICATIONS
-==============
-${resume.certifications.length > 0 ? resume.certifications.join('\n') : 'No certifications listed'}
-
-AWARDS & ACHIEVEMENTS
-====================
-${resume.awards_achievements.length > 0 ? resume.awards_achievements.join('\n') : 'No awards listed'}
-
-LANGUAGES
-=========
-${resume.languages.join(', ')}
-
-AVAILABILITY & WORK STATUS
-==========================
-Availability Status: ${resume.availability_status || 'Not specified'}
-Work Authorization: ${resume.work_authorization_status || 'Not specified'}
-
-METADATA
-========
-Original Filename: ${resume._original_filename}
-Is Master Record: ${resume._is_master_record ? 'Yes' : 'No'}
-Duplicate Count: ${resume._duplicate_count}
-Duplicate Group ID: ${resume._duplicate_group_id}
-Associated Files: ${resume._associated_original_filenames.join(', ')}
-Associated IDs: ${resume._associated_ids.join(', ')}
-
-Personal Details: ${resume.personal_details || 'Not available'}
-Personal Info: ${resume.personal_info || 'Not available'}
-
-Generated on: ${new Date().toLocaleDateString()}
-      `.trim();
+      // Create form data for the request
+      const formData = new FormData();
+      formData.append('resume_ids', resume.id); // Single ID as string
+      formData.append('template', template); // Use 'template' as the parameter name
       
-      // Create a blob with the resume content
-      const blob = new Blob([resumeText], { type: 'text/plain' });
+      // Call the API to generate the resume document
+      const response = await fetch(API_ENDPOINTS.DOWNLOAD_SELECTED_RESUMES, {
+        method: 'POST',
+        body: formData, // Send as form data
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        
+        // Check for the specific NoneType error or any document generation error
+        if (errorText.includes("'NoneType' object has no attribute 'save'") || 
+            errorText.includes("Failed to generate document") ||
+            errorText.includes("Download failed")) {
+          
+          // Log the error for debugging
+          console.error("Document generation error:", errorText);
+          
+          // Show a more helpful error message
+          const errorMessage = "The resume document could not be generated. This may be due to missing data or a backend configuration issue.";
+          
+          // Automatically download as text instead of showing confirmation dialog
+          try {
+            // Create a text file with the resume content
+            const textContent = formatResumeAsText(resume);
+            const textBlob = new Blob([textContent], { type: 'text/plain' });
+            const textUrl = URL.createObjectURL(textBlob);
+            
+            // Create download link for text file
+            const link = document.createElement('a');
+            link.href = textUrl;
+            link.download = `${resume.name.replace(/\s+/g, '_')}_Resume.txt`;
+            link.style.display = 'none';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            URL.revokeObjectURL(textUrl);
+            
+            // Show success message
+            alert(`${errorMessage}\n\nA text version of the resume has been downloaded instead.`);
+          } catch (textError) {
+            console.error("Error creating text file:", textError);
+            alert(`${errorMessage}\n\nPlease use the "Download as Text" button instead.`);
+          }
+          
+          return;
+        }
+        
+        throw new Error(`API error: ${response.status} - ${errorText}`);
+      }
+      
+      // Get the blob from the response
+      const blob = await response.blob();
       
       // Create a temporary URL for the blob
       const url = URL.createObjectURL(blob);
@@ -261,7 +264,10 @@ Generated on: ${new Date().toLocaleDateString()}
       // Create a temporary anchor element to trigger download
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${resume.name.replace(/\s+/g, '_')}_Complete_Resume.txt`;
+      
+      // Set the filename based on the template and candidate name
+      const templatePrefix = template.charAt(0).toUpperCase() + template.slice(1);
+      link.download = `${templatePrefix}_Resume_${resume.name.replace(/\s+/g, '_')}.docx`;
       link.style.display = 'none';
       
       // Append to body, click, and remove
@@ -280,11 +286,99 @@ Generated on: ${new Date().toLocaleDateString()}
       setDownloadLoading(false);
     }
   };
+  
+  // Helper function to format resume as text
+  const formatResumeAsText = (resume: SearchResult): string => {
+    return `
+RESUME: ${resume.name}
+====================
+
+CONTACT INFORMATION
+------------------
+Name: ${resume.name}
+Email: ${resume.email_id}
+Phone: ${resume.phone_number || 'Not provided'}
+Location: ${resume.location}
+LinkedIn: ${resume.linkedin_url || 'Not provided'}
+GitHub: ${resume.github_url || 'Not provided'}
+
+PROFESSIONAL SUMMARY
+------------------
+Current Job Title: ${resume.current_job_title}
+Objective: ${resume.objective}
+
+SKILLS
+------
+${resume.skills.join(', ')}
+
+EXPERIENCE
+----------
+${resume.experience_summary}
+
+Companies:
+${resume.companies_worked_with_duration.join('\n')}
+
+QUALIFICATIONS
+-------------
+${resume.qualifications_summary}
+
+PROJECTS
+--------
+${resume.projects.length > 0 ? resume.projects.join('\n\n') : 'No projects listed'}
+
+CERTIFICATIONS
+-------------
+${resume.certifications.length > 0 ? resume.certifications.join('\n') : 'No certifications listed'}
+
+AWARDS & ACHIEVEMENTS
+-------------------
+${resume.awards_achievements.length > 0 ? resume.awards_achievements.join('\n') : 'No awards listed'}
+
+LANGUAGES
+--------
+${resume.languages.join(', ')}
+
+AVAILABILITY & WORK STATUS
+------------------------
+Availability Status: ${resume.availability_status || 'Not specified'}
+Work Authorization: ${resume.work_authorization_status || 'Not specified'}
+`;
+  };
+
+  // Preview template function
+  const previewTemplate = async () => {
+    if (!selectedResume) return;
+    
+    setPreviewMode(true);
+    setPreviewLoading(true);
+    
+    try {
+      // Here we could call an API endpoint to get a preview image
+      // For now, we'll just simulate a loading delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // In a real implementation, you might fetch a preview image from the API
+      // and display it in the modal
+    } catch (error) {
+      console.error("Error loading preview:", error);
+      alert("Failed to load preview. Please try again.");
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+  
+  // Close preview
+  const closePreview = () => {
+    setPreviewMode(false);
+  };
 
   const closeModal = () => {
     setSelectedResume(null);
     setResumeContent("");
     setDownloadLoading(false);
+    setShowTemplateOptions(false);
+    setPreviewMode(false);
+    setSelectedTemplate("professional"); // Reset to default template
   };
 
   // Handle escape key to close modal
@@ -856,33 +950,337 @@ Generated on: ${new Date().toLocaleDateString()}
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex space-x-3 pt-4 border-t">
-                    <button
-                      onClick={() => downloadResume(selectedResume)}
-                      disabled={downloadLoading}
-                      className="flex-1 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-medium transition"
-                    >
-                      {downloadLoading ? (
-                        <>
-                          <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Downloading...
-                        </>
-                      ) : (
-                        <>📄 Download Complete Resume</>
+                  <div className="space-y-4 pt-4 border-t">
+                    {/* Note about document generation */}
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                      <div className="flex items-start">
+                        <div className="text-yellow-600 text-xl mr-2">⚠️</div>
+                        <div>
+                          <p className="text-sm text-yellow-800 font-medium">Document Generation Notice</p>
+                          <p className="text-xs text-yellow-700 mt-1">
+                            The Word document generation feature is currently experiencing issues. 
+                            For reliable resume downloads, please use the "Download as Text" option below.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Template Selection */}
+                    <div className="relative">
+                      <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200 mb-2">
+                        <div>
+                          <span className="text-sm font-medium text-gray-700">Template Style:</span>
+                          <div className="flex items-center">
+                            <span className="text-md font-semibold text-gray-900 capitalize">{selectedTemplate}</span>
+                            <span className="ml-2 text-xs text-gray-500">{TEMPLATE_DESCRIPTIONS[selectedTemplate]}</span>
+                          </div>
+                        </div>
+                        <button
+                          onClick={toggleTemplateOptions}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                          {showTemplateOptions ? 'Hide Options' : 'Change Template'}
+                        </button>
+                      </div>
+                      
+                      {/* Template Options */}
+                      {showTemplateOptions && (
+                        <div className="absolute z-10 w-full bg-white rounded-lg shadow-xl border border-gray-200 p-4 mt-1">
+                          <div className="text-sm font-medium text-gray-700 mb-3 px-2">Select a template style:</div>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {RESUME_TEMPLATES.map((template) => (
+                              <button
+                                key={template}
+                                onClick={() => selectTemplateAndDownload(template)}
+                                className={`flex items-start p-4 rounded-lg transition ${
+                                  selectedTemplate === template 
+                                    ? 'bg-white border-2 border-blue-300' 
+                                    : 'dark:hover:bg-gray-600 hover:bg-gray-100 border border-gray-200'
+                                }`}
+                              >
+                                {/* Template Preview */}
+                                <div className={`w-16 h-20 mr-4 flex-shrink-0 border ${
+                                  selectedTemplate === template ? 'border-blue-300' : 'border-gray-300'
+                                } rounded overflow-hidden`}>
+                                  {template === 'professional' && (
+                                    <div className="h-full w-full bg-white flex flex-col">
+                                      <div className="h-4 bg-blue-600 w-full"></div>
+                                      <div className="flex-1 p-1">
+                                        <div className="h-2 w-3/4 bg-gray-300 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-2 w-1/2 bg-gray-300 mt-2"></div>
+                                        <div className="h-1 w-full bg-gray-200 mt-1"></div>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {template === 'modern' && (
+                                    <div className="h-full w-full bg-white flex">
+                                      <div className="w-1/3 bg-gray-700"></div>
+                                      <div className="w-2/3 p-1">
+                                        <div className="h-2 w-3/4 bg-gray-300 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-2 w-1/2 bg-gray-300 mt-2"></div>
+                                        <div className="h-1 w-full bg-gray-200 mt-1"></div>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {template === 'compact' && (
+                                    <div className="h-full w-full bg-white flex flex-col">
+                                      <div className="h-3 bg-orange-500 w-full"></div>
+                                      <div className="flex-1 p-1">
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                        <div className="h-1 w-full bg-gray-200 mb-1"></div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                
+                                {/* Template Info */}
+                                <div className="flex flex-col items-start text-left flex-1">
+                                  <span className={`font-medium capitalize text-lg ${selectedTemplate === template ? 'text-blue-700' : 'text-gray-800'}`}>
+                                    {template}
+                                  </span>
+                                  <span className="text-sm text-gray-600 mt-1">{TEMPLATE_DESCRIPTIONS[template]}</span>
+                                  
+                                  {selectedTemplate === template && (
+                                    <span className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                      Selected
+                                    </span>
+                                  )}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       )}
-                    </button>
-                    <button
-                      onClick={() => deleteResume(selectedResume.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-medium transition"
-                    >
-                      🗑️ Delete Resume
-                    </button>
-                    <button
-                      onClick={closeModal}
-                      className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg font-medium transition"
-                    >
-                      Close
-                    </button>
+                    </div>
+                    
+                    {/* Preview Mode */}
+                    {previewMode && (
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+                        <div className="flex justify-between items-center mb-3">
+                          <h3 className="text-lg font-semibold text-gray-800">Template Preview: <span className="capitalize">{selectedTemplate}</span></h3>
+                          <button 
+                            onClick={closePreview}
+                            className="text-gray-500 hover:text-gray-700"
+                          >
+                            ✕ Close Preview
+                          </button>
+                        </div>
+                        
+                        {previewLoading ? (
+                          <div className="flex items-center justify-center py-12">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+                            <span className="ml-3 text-gray-600">Loading preview...</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center">
+                            {/* Template Preview Mockup */}
+                            <div className="w-full max-w-md aspect-[3/4] bg-white border border-gray-300 shadow-lg mb-4 overflow-hidden">
+                              {selectedTemplate === 'professional' && (
+                                <div className="h-full flex flex-col">
+                                  <div className="bg-blue-600 text-white p-6">
+                                    <div className="text-2xl font-bold mb-1">{selectedResume.name}</div>
+                                    <div className="text-sm opacity-90">{selectedResume.current_job_title} | {selectedResume.email_id} | {selectedResume.location}</div>
+                                  </div>
+                                  <div className="flex-1 p-6">
+                                    <div className="border-b border-gray-300 pb-2 mb-4">
+                                      <div className="font-bold text-gray-800 mb-2">PROFESSIONAL SUMMARY</div>
+                                      <div className="bg-gray-100 h-16 rounded"></div>
+                                    </div>
+                                    <div className="border-b border-gray-300 pb-2 mb-4">
+                                      <div className="font-bold text-gray-800 mb-2">SKILLS</div>
+                                      <div className="flex flex-wrap gap-2">
+                                        {selectedResume.skills.slice(0, 6).map((skill, i) => (
+                                          <div key={i} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">{skill}</div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <div className="border-b border-gray-300 pb-2 mb-4">
+                                      <div className="font-bold text-gray-800 mb-2">EXPERIENCE</div>
+                                      <div className="space-y-2">
+                                        {selectedResume.companies_worked_with_duration.slice(0, 2).map((company, i) => (
+                                          <div key={i} className="bg-gray-100 h-8 rounded"></div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {selectedTemplate === 'modern' && (
+                                <div className="h-full flex">
+                                  <div className="w-1/3 bg-gray-800 text-white p-4">
+                                    <div className="text-lg font-bold mb-6 border-b border-gray-600 pb-2">{selectedResume.name.split(' ')[0]}<br/>{selectedResume.name.split(' ').slice(1).join(' ')}</div>
+                                    <div className="text-sm mb-4">
+                                      <div className="mb-1 opacity-80">Contact</div>
+                                      <div className="text-xs mb-3 opacity-90">{selectedResume.email_id}<br/>{selectedResume.location}</div>
+                                      
+                                      <div className="mb-1 opacity-80">Skills</div>
+                                      <div className="text-xs space-y-1">
+                                        {selectedResume.skills.slice(0, 5).map((skill, i) => (
+                                          <div key={i} className="bg-gray-700 px-2 py-1 rounded text-xs">{skill}</div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="w-2/3 p-4">
+                                    <div className="text-xl font-bold text-gray-800 mb-2">{selectedResume.current_job_title}</div>
+                                    <div className="text-sm text-gray-600 mb-4">{selectedResume.objective.substring(0, 60)}...</div>
+                                    
+                                    <div className="mb-4">
+                                      <div className="font-bold text-gray-800 mb-2 border-b border-gray-300 pb-1">EXPERIENCE</div>
+                                      <div className="space-y-2 mt-2">
+                                        {selectedResume.companies_worked_with_duration.slice(0, 2).map((company, i) => (
+                                          <div key={i} className="bg-gray-100 h-8 rounded"></div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    
+                                    <div>
+                                      <div className="font-bold text-gray-800 mb-2 border-b border-gray-300 pb-1">EDUCATION</div>
+                                      <div className="bg-gray-100 h-8 rounded mt-2"></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {selectedTemplate === 'compact' && (
+                                <div className="h-full flex flex-col">
+                                  <div className="bg-orange-500 text-white p-3">
+                                    <div className="text-lg font-bold">{selectedResume.name}</div>
+                                    <div className="text-xs">{selectedResume.current_job_title} | {selectedResume.email_id}</div>
+                                  </div>
+                                  <div className="flex-1 p-3 text-sm">
+                                    <div className="grid grid-cols-2 gap-2">
+                                      <div>
+                                        <div className="font-bold text-gray-800 text-xs mb-1">SKILLS</div>
+                                        <div className="flex flex-wrap gap-1 mb-2">
+                                          {selectedResume.skills.slice(0, 4).map((skill, i) => (
+                                            <div key={i} className="bg-orange-100 text-orange-800 px-1 py-0.5 rounded text-xs">{skill}</div>
+                                          ))}
+                                        </div>
+                                        
+                                        <div className="font-bold text-gray-800 text-xs mb-1 mt-2">EXPERIENCE</div>
+                                        <div className="space-y-1">
+                                          {selectedResume.companies_worked_with_duration.slice(0, 2).map((company, i) => (
+                                            <div key={i} className="bg-gray-100 h-4 rounded"></div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                      
+                                      <div>
+                                        <div className="font-bold text-gray-800 text-xs mb-1">EDUCATION</div>
+                                        <div className="bg-gray-100 h-4 rounded mb-2"></div>
+                                        
+                                        <div className="font-bold text-gray-800 text-xs mb-1 mt-2">CERTIFICATIONS</div>
+                                        <div className="space-y-1">
+                                          {selectedResume.certifications.slice(0, 2).map((cert, i) => (
+                                            <div key={i} className="bg-gray-100 h-4 rounded"></div>
+                                          ))}
+                                          {selectedResume.certifications.length === 0 && (
+                                            <div className="bg-gray-100 h-4 rounded"></div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="text-sm text-gray-600 italic">
+                              This is a visual representation. The actual document may vary.
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Action Buttons */}
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={() => downloadResume(selectedResume)}
+                        disabled={downloadLoading}
+                        className="flex-1 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg font-medium transition"
+                      >
+                        {downloadLoading ? (
+                          <div className="flex items-center justify-center">
+                            <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                            <span>Generating Document...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            <span className="text-xl mr-2">📄</span>
+                            <span>Download as Word Document</span>
+                          </div>
+                        )}
+                      </button>
+                      
+                      {/* Text Download Option */}
+                      <button
+                        onClick={() => {
+                          try {
+                            const textContent = formatResumeAsText(selectedResume);
+                            const textBlob = new Blob([textContent], { type: 'text/plain' });
+                            const textUrl = URL.createObjectURL(textBlob);
+                            
+                            const link = document.createElement('a');
+                            link.href = textUrl;
+                            link.download = `${selectedResume.name.replace(/\s+/g, '_')}_Resume.txt`;
+                            link.style.display = 'none';
+                            
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                            URL.revokeObjectURL(textUrl);
+                            
+                            // Show success message
+                            alert("Text version of the resume has been downloaded successfully!");
+                          } catch (error) {
+                            console.error("Error downloading text resume:", error);
+                            alert("Failed to download text resume. Please try again.");
+                          }
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition flex-1"
+                      >
+                        <div className="flex items-center justify-center">
+                          <span className="text-xl mr-2">📝</span>
+                          <span>Download as Text (Reliable)</span>
+                        </div>
+                      </button>
+                      
+                      {!previewMode && (
+                        <button
+                          onClick={previewTemplate}
+                          disabled={previewLoading}
+                          className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg font-medium transition"
+                        >
+                          <span className="text-xl">👁️</span>
+                        </button>
+                      )}
+                      
+                      <button
+                        onClick={() => deleteResume(selectedResume.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium transition"
+                      >
+                        <span className="text-xl">🗑️</span>
+                      </button>
+                      
+                      <button
+                        onClick={closeModal}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-4 rounded-lg font-medium transition"
+                      >
+                        Close
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
