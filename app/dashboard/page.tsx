@@ -81,7 +81,7 @@ export default function Dashboard() {
 
   return (
     <AuthWrapper>
-      <div className="p-6 lg:p-8 dark:bg-slate-800 min-h-screen">
+      <div className="p-6 lg:p-8 min-h-screen">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-black dark:text-white mb-2">
