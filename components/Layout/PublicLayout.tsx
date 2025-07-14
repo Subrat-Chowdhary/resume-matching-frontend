@@ -85,7 +85,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   };
 
   const handleLogout = () => {
-    signOut({ callbackUrl: 'http://localhost:3000' });
+    signOut({ callbackUrl: window.location.origin + '/' });
   };
 
   return (
@@ -263,7 +263,8 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   {pathname === '/upload' && 'Upload Resumes'}
                   {pathname === '/health' && 'System Health'}
                   {pathname === '/test-analytics' && 'Analytics Testing'}
-                  {pathname === '/' && 'Dashboard'}
+                  {pathname === '/' && 'Home'}
+                  {pathname === '/dashboard' && 'Dashboard'}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {pathname === '/analytics' && 'Monitor your platform usage and insights'}
@@ -271,7 +272,8 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   {pathname === '/upload' && 'Add new resumes to the database'}
                   {pathname === '/health' && 'System status and performance'}
                   {pathname === '/test-analytics' && 'Test analytics functionality'}
-                  {pathname === '/' && 'Welcome to your AI-powered resume platform'}
+                  {pathname === '/' && 'Welcome to AI Resume Matcher'}
+                  {pathname === '/dashboard' && 'Welcome to your AI-powered resume platform'}
                 </p>
               </div>
             </div>
