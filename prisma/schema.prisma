@@ -14,4 +14,127 @@ model User {
   password  String
   role      String   @default("user")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Subscription fields
+  subscriptionType String @default("free") // free, basic, premium, enterprise
+  subscriptionStart DateTime?
+  subscriptionEnd   DateTime?
+  isActive         Boolean @default(true)
+  
+  // Usage limits
+  monthlySearchLimit    Int @default(10)
+  monthlyDownloadLimit  Int @default(5)
+  currentMonthSearches  Int @default(0)
+  currentMonthDownloads Int @default(0)
+  
+  // Relations
+  sessions   UserSession[]
+  activities UserActivity[]
+  
+  @@map("users")
+}
+
+model UserSession {
+  id          String   @id @default(cuid())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId   String   @unique
+  ipAddress   String?
+  userAgent   String?
+  location    String?
+  device      String?
+  browser     String?
+  loginTime   DateTime @default(now())
+  logoutTime  DateTime?
+  lastActivity DateTime @default(now())
+  isActive    Boolean  @default(true)
+  duration    Int?     // in seconds
+  
+  // Relations
+  activities  UserActivity[]
+  
+  @@map("user_sessions")
+}
+
+model UserActivity {
+  id          String      @id @default(cuid())
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId   String
+  session     UserSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+  
+  // Activity Details
+  activityType ActivityType
+  description  String
+  metadata     Json?       // Flexible data storage for additional info
+  timestamp    DateTime    @default(now())
+  
+  // Search specific fields
+  searchQuery     String?
+  jobCategory     String?
+  skillsSearched  String?
+  experienceLevel String?
+  resultsCount    Int?
+  timeSpent       Int?        // in seconds
+  
+  // Resume interaction fields
+  resumeId        String?
+  resumeFileName  String?
+  downloadPath    String?
+  viewDuration    Int?        // time spent viewing resume
+  
+  // Page/Feature usage
+  pageUrl         String?
+  featureUsed     String?
+  
+  @@map("user_activities")
+}
+
+model SystemMetrics {
+  id          String   @id @default(cuid())
+  date        DateTime @default(now())
+  
+  // Daily aggregated metrics
+  totalUsers       Int @default(0)
+  activeUsers      Int @default(0)
+  newRegistrations Int @default(0)
+  totalSearches    Int @default(0)
+  totalDownloads   Int @default(0)
+  totalUploads     Int @default(0)
+  
+  // Performance metrics
+  avgResponseTime  Float?
+  errorCount       Int @default(0)
+  
+  @@unique([date])
+  @@map("system_metrics")
+}
+
+enum ActivityType {
+  // Authentication
+  LOGIN
+  LOGOUT
+  REGISTER
+  
+  // Resume Operations
+  SEARCH_RESUME
+  VIEW_RESUME
+  DOWNLOAD_RESUME
+  UPLOAD_RESUME
+  
+  // Profile & Settings
+  PROFILE_UPDATE
+  SETTINGS_CHANGE
+  PASSWORD_CHANGE
+  
+  // Subscription
+  SUBSCRIPTION_UPGRADE
+  SUBSCRIPTION_DOWNGRADE
+  SUBSCRIPTION_CANCEL
+  
+  // System
+  PAGE_VIEW
+  FEATURE_USAGE
+  ERROR_OCCURRED
 }
