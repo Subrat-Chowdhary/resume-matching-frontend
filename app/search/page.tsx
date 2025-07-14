@@ -827,7 +827,7 @@ Work Authorization: ${resume.work_authorization_status || 'Not specified'}
                           {selectedResume.certifications.map((cert, index) => (
                             <div
                               key={index}
-                              className="bg-yellow-50 px-3 py-2 rounded-md text-sm text-gray-700"
+                              className="bg-yellow-50 dark:bg-slate-800 px-3 py-2 rounded-md text-sm text-gray-700"
                             >
                               {cert}
                             </div>
@@ -952,7 +952,7 @@ Work Authorization: ${resume.work_authorization_status || 'Not specified'}
                   {/* Action Buttons */}
                   <div className="space-y-4 pt-4 border-t">
                     {/* Note about document generation */}
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                    {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
                       <div className="flex items-start">
                         <div className="text-yellow-600 text-xl mr-2">⚠️</div>
                         <div>
@@ -963,7 +963,7 @@ Work Authorization: ${resume.work_authorization_status || 'Not specified'}
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     
                     {/* Template Selection */}
                     <div className="relative">
