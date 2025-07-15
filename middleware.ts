@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Public routes that don't require authentication
-  const publicRoutes = ['/login', '/register'];
+  const publicRoutes = ['/', '/login', '/register'];
   
   // If user is not authenticated
   if (!token || !token.sub) {
@@ -37,8 +37,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // If user is authenticated but trying to access login/register, redirect to dashboard
-  if (publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL('/', request.url));
+  if (pathname === '/login' || pathname === '/register') {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   // User is authenticated and accessing protected routes

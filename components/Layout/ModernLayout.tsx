@@ -96,7 +96,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
         pageUrl: pathname,
       });
     }
-    signOut({ callbackUrl: window.location.origin + '/login' });
+    signOut({ callbackUrl: window.location.origin + '/' });
   };
 
   // if (status === 'loading') {
@@ -146,13 +146,13 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
         }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-70 h-screen bg-yellow-100 dark:bg-slate-900
+          fixed lg:static inset-y-0 left-0 z-50 w-70 h-screen bg-gradient-to-b from-orange-100 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900
           flex flex-col
           ${isMobile ? 'lg:translate-x-0' : ''}
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between px-4 py-4 dark:border-gray-700">
           <div className="flex flex-row items-center space-x-2">
             {/* <Image src={logo} width={60} height={30} alt="Logo" className="rounded-md" /> */}
 
@@ -260,7 +260,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
       {/* Main Content */}
       <div className={`flex-1 flex flex-col ${isMobile ? 'w-full' : 'lg:ml-0'}`}>
         {/* Top Header */}
-        <header className="bg-yellow-100 dark:bg-slate-900 shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-4">
+        <header className="bg-gradient-to-r from-orange-100 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               {isMobile && (
@@ -335,7 +335,7 @@ export default function ModernLayout({ children }: ModernLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto bg-purple-50 dark:bg-black">
+        <main className="flex-1 overflow-auto bg-gradient-to-br from-blue-100 via-white to-orange-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}

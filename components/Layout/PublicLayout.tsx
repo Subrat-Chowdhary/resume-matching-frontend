@@ -85,11 +85,11 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   };
 
   const handleLogout = () => {
-    signOut({ callbackUrl: 'http://localhost:3000' });
+    signOut({ callbackUrl: window.location.origin + '/' });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex">
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div 
@@ -107,7 +107,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-70 bg-white dark:bg-gray-800 shadow-xl
+          fixed lg:static inset-y-0 left-0 z-50 w-70 bg-gradient-to-b from-orange-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-xl
           flex flex-col border-r border-gray-200 dark:border-gray-700
           ${isMobile ? 'lg:translate-x-0' : ''}
         `}
@@ -244,7 +244,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
       {/* Main Content */}
       <div className={`flex-1 flex flex-col ${isMobile ? 'w-full' : 'lg:ml-0'}`}>
         {/* Top Header */}
-        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-4">
+        <header className="bg-gradient-to-r from-orange-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               {isMobile && (
@@ -263,7 +263,8 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   {pathname === '/upload' && 'Upload Resumes'}
                   {pathname === '/health' && 'System Health'}
                   {pathname === '/test-analytics' && 'Analytics Testing'}
-                  {pathname === '/' && 'Dashboard'}
+                  {pathname === '/' && 'Home'}
+                  {pathname === '/dashboard' && 'Dashboard'}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {pathname === '/analytics' && 'Monitor your platform usage and insights'}
@@ -271,7 +272,8 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   {pathname === '/upload' && 'Add new resumes to the database'}
                   {pathname === '/health' && 'System status and performance'}
                   {pathname === '/test-analytics' && 'Test analytics functionality'}
-                  {pathname === '/' && 'Welcome to your AI-powered resume platform'}
+                  {pathname === '/' && 'Welcome to AI Resume Matcher'}
+                  {pathname === '/dashboard' && 'Welcome to your AI-powered resume platform'}
                 </p>
               </div>
             </div>
@@ -307,7 +309,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
+        <main className="flex-1 overflow-auto bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
